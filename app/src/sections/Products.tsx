@@ -1,303 +1,124 @@
 import { useRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ChevronLeft, ChevronRight, ShoppingCart } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-interface Product {
+interface Category {
   id: number;
   name: string;
-  price: number;
   image: string;
-  category: string;
-  colors: string[];
-  isNew?: boolean;
-  isBestseller?: boolean;
+  count?: string;
 }
 
-const products: Product[] = [
-  {
-    id: 1,
-    name: 'Nordic Minimal',
-    price: 189,
-    image: '/images/minimalist-handle.png',
-    category: 'Современные',
-    colors: ['#1a1a1a', '#c0c0c0', '#d4af37'],
-    isNew: true,
-  },
-  {
-    id: 2,
-    name: 'Premium Brass',
-    price: 249,
-    image: '/images/brass-handle.jpg',
-    category: 'Классические',
-    colors: ['#d4af37', '#8b7355', '#1a1a1a'],
-    isBestseller: true,
-  },
-  {
-    id: 3,
-    name: 'Matte Black Pro',
-    price: 159,
-    image: '/images/premium-handle.jpg',
-    category: 'Индустриальные',
-    colors: ['#1a1a1a', '#666666', '#ffffff'],
-    isBestseller: true,
-  },
-  {
-    id: 4,
-    name: 'Scandinavian Touch',
-    price: 199,
-    image: '/images/scandinavian-handle.jpg',
-    category: 'Скандинавские',
-    colors: ['#c0c0c0', '#1a1a1a', '#f5f5f5'],
-  },
-  {
-    id: 5,
-    name: 'Luxury Gold',
-    price: 349,
-    image: '/images/luxury-handle.jpg',
-    category: 'Премиум',
-    colors: ['#d4af37', '#1a1a1a', '#ffffff'],
-    isNew: true,
-  },
-  {
-    id: 6,
-    name: 'Smart Touch',
-    price: 449,
-    image: '/images/smart-handle.jpg',
-    category: 'Умные',
-    colors: ['#1a1a1a', '#4a90e2', '#c0c0c0'],
-    isNew: true,
-  },
-  {
-    id: 7,
-    name: 'Designer Elite',
-    price: 279,
-    image: '/images/designer-handle.jpg',
-    category: 'Дизайнерские',
-    colors: ['#1a1a1a', '#d4af37', '#c0c0c0'],
-  },
-  {
-    id: 8,
-    name: 'Modern Classic',
-    price: 219,
-    image: '/images/modern-minimalist.jpg',
-    category: 'Современные',
-    colors: ['#666666', '#1a1a1a', '#ffffff'],
-  },
+const categories: Category[] = [
+  { id: 1, name: 'Ручки', image: '/images/products/alfa-black.jpg', count: '120+ моделей' },
+  { id: 2, name: 'Дверные механизмы', image: '/images/products/mechanism-magnetic.jpg', count: 'Магнитные, Пластик, Металл' },
+  { id: 3, name: 'Цилиндровые мех.', image: '/images/products/cylinder.png', count: 'Все размеры' },
+  { id: 4, name: 'Защёлки', image: '/images/products/latch.jpg', count: 'Надежная фиксация' },
+  { id: 5, name: 'Задвижки', image: '/images/products/deadbolt.jpg', count: 'Дополнительная защита' },
+  { id: 6, name: 'Петли', image: '/images/products/hinge-overlay.jpg', count: 'Накладные и Врезные' },
+  { id: 7, name: 'Накладки', image: '/images/products/escutcheon.jpg', count: 'Декоративные элементы' },
+  { id: 8, name: 'WC комплекты', image: '/images/products/wc-kit.jpg', count: 'Для санузлов' },
+  { id: 9, name: 'Замки на планке', image: '/images/products/mechanism-magnetic.jpg', count: 'Классика' },
+  { id: 10, name: 'Упоры дверные', image: '/images/products/door-stop.jpg', count: 'Защита стен' },
+  { id: 11, name: 'Раздвижные системы', image: '/images/products/terra-sn.jpg', count: 'Экономия пространства' },
+  { id: 12, name: 'Фурнитура', image: '/images/products/cube-white.jpg', count: 'Аксессуары' },
 ];
 
 const Products = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [activeFilter, setActiveFilter] = useState('Все');
-  const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
-
-  const categories = ['Все', 'Современные', 'Классические', 'Индустриальные', 'Скандинавские', 'Премиум', 'Умные', 'Дизайнерские'];
-
-  const filteredProducts = activeFilter === 'Все'
-    ? products
-    : products.filter(p => p.category === activeFilter);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [hoveredId, setHoveredId] = useState<number | null>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        '.products-heading',
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 80%',
-          },
-        }
-      );
+      const track = trackRef.current;
+      if (!track) return;
 
-      gsap.fromTo(
-        '.product-card-item',
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.products-grid',
-            start: 'top 85%',
-          },
+      const trackWidth = track.scrollWidth;
+      const windowWidth = window.innerWidth;
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top top',
+          end: () => `+=${trackWidth - windowWidth + 100}`,
+          scrub: 1,
+          pin: true,
+          anticipatePin: 1,
         }
-      );
+      });
+
+      tl.to(track, {
+        x: () => -(trackWidth - windowWidth),
+        ease: 'none',
+      });
+
     }, sectionRef);
 
     return () => ctx.revert();
-  }, [activeFilter]);
-
-  const scroll = (direction: 'left' | 'right') => {
-    if (scrollContainerRef.current) {
-      const scrollAmount = 400;
-      scrollContainerRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth',
-      });
-    }
-  };
+  }, []);
 
   return (
     <section
       id="products"
       ref={sectionRef}
-      className="relative w-full py-24 lg:py-32 bg-white overflow-hidden"
+      className="relative w-full h-screen bg-door-light overflow-hidden flex flex-col justify-center"
     >
-      {/* Background watermark */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -right-20 top-1/2 -translate-y-1/2 text-[20vw] font-display font-bold text-door-light/50 whitespace-nowrap select-none">
-          DOORHANDLES
+      {/* Background Watermark */}
+      <div className="absolute top-[10%] left-0 w-full pointer-events-none opacity-5">
+        <h2 className="text-[15vw] font-display font-bold leading-none text-door-dark whitespace-nowrap pl-10">
+          КАТАЛОГ
+        </h2>
+      </div>
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-12 xl:px-20 mb-8 z-10">
+        <div className="flex justify-between items-end">
+          <div>
+            <span className="text-door-accent font-medium tracking-wide uppercase text-sm">Продукция</span>
+            <h3 className="font-display text-4xl font-bold text-door-black">Категории</h3>
+          </div>
+          <div className="hidden sm:block text-door-medium text-sm">
+            Тяните для просмотра
+          </div>
         </div>
       </div>
 
-      <div className="relative w-full px-4 sm:px-6 lg:px-12 xl:px-20">
-        {/* Header */}
-        <div className="products-heading flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-12">
-          <div>
-            <span className="text-sm font-medium text-door-accent uppercase tracking-wider mb-2 block">
-              Наша коллекция
-            </span>
-            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-door-black tracking-tight">
-              Отобрано для <span className="text-door-medium">совершенства</span>
-            </h2>
-          </div>
-
-          {/* Filters */}
-          <div className="flex items-center gap-2 overflow-x-auto hide-scrollbar pb-2">
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setActiveFilter(category)}
-                className={`px-4 py-2 text-sm font-medium rounded-full whitespace-nowrap transition-all duration-300 ${
-                  activeFilter === category
-                    ? 'bg-door-black text-white'
-                    : 'bg-door-light text-door-dark hover:bg-door-border'
-                }`}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Scroll Controls */}
-        <div className="hidden lg:flex items-center justify-end gap-2 mb-6">
-          <button
-            onClick={() => scroll('left')}
-            className="p-3 bg-door-light hover:bg-door-border rounded-full transition-colors duration-300"
+      {/* Horizontal Track */}
+      <div
+        ref={trackRef}
+        className="flex gap-6 px-4 sm:px-6 lg:px-12 xl:px-20 w-max items-center"
+      >
+        {categories.map((cat) => (
+          <Link
+            to="/catalog"
+            key={cat.id}
+            className="relative w-[280px] sm:w-[320px] aspect-[3/4] shrink-0 group block"
+            onMouseEnter={() => setHoveredId(cat.id)}
+            onMouseLeave={() => setHoveredId(null)}
           >
-            <ChevronLeft className="w-5 h-5 text-door-dark" />
-          </button>
-          <button
-            onClick={() => scroll('right')}
-            className="p-3 bg-door-black hover:bg-door-dark text-white rounded-full transition-colors duration-300"
-          >
-            <ChevronRight className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Products Grid */}
-        <div
-          ref={scrollContainerRef}
-          className="products-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 overflow-x-auto hide-scrollbar pb-4"
-        >
-          {filteredProducts.map((product) => (
-            <div
-              key={product.id}
-              className="product-card-item group relative bg-door-light rounded-2xl overflow-hidden card-hover"
-              onMouseEnter={() => setHoveredProduct(product.id)}
-              onMouseLeave={() => setHoveredProduct(null)}
-            >
-              {/* Badges */}
-              <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
-                {product.isNew && (
-                  <span className="px-3 py-1 bg-door-accent text-white text-xs font-medium rounded-full">
-                    Новинка
-                  </span>
-                )}
-                {product.isBestseller && (
-                  <span className="px-3 py-1 bg-door-black text-white text-xs font-medium rounded-full">
-                    Бестселлер
-                  </span>
-                )}
-              </div>
-
-              {/* Image */}
-              <div className="relative aspect-[4/5] overflow-hidden bg-white">
+            <div className="w-full h-full bg-white rounded-2xl overflow-hidden shadow-soft transition-all duration-500 group-hover:shadow-elevated group-hover:-translate-y-2">
+              <div className="h-2/3 w-full p-6 bg-gray-50 flex items-center justify-center">
                 <img
-                  src={product.image}
-                  alt={product.name}
-                  className={`w-full h-full object-cover transition-all duration-700 ${
-                    hoveredProduct === product.id ? 'scale-110' : 'scale-100'
-                  }`}
+                  src={cat.image}
+                  alt={cat.name}
+                  className="max-h-full max-w-full object-contain transition-transform duration-700 group-hover:scale-110"
                 />
-
-                {/* Quick Add Button */}
-                <button
-                  className={`absolute bottom-4 right-4 p-3 bg-white rounded-full shadow-card hover:bg-door-black hover:text-white transition-all duration-300 ${
-                    hoveredProduct === product.id
-                      ? 'opacity-100 translate-y-0'
-                      : 'opacity-0 translate-y-4'
-                  }`}
-                >
-                  <ShoppingCart className="w-5 h-5" />
-                </button>
               </div>
+              <div className="h-1/3 p-6 flex flex-col justify-center relative bg-white">
+                <h4 className="font-display font-bold text-xl text-door-black mb-1 group-hover:text-door-accent transition-colors">{cat.name}</h4>
+                <p className="text-sm text-door-medium">{cat.count}</p>
 
-              {/* Content */}
-              <div className="p-5">
-                <span className="text-xs text-door-medium uppercase tracking-wider">
-                  {product.category}
-                </span>
-                <h3 className="font-display font-semibold text-door-black mt-1 mb-2 group-hover:text-door-accent transition-colors duration-300">
-                  {product.name}
-                </h3>
-
-                {/* Color Swatches */}
-                <div className="flex items-center gap-1 mb-3">
-                  {product.colors.map((color, index) => (
-                    <div
-                      key={index}
-                      className="w-5 h-5 rounded-full border-2 border-white shadow-xs"
-                      style={{ backgroundColor: color }}
-                    />
-                  ))}
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="font-display font-bold text-xl text-door-black">
-                    ${product.price}
-                  </span>
-                  <button className="text-sm font-medium text-door-accent hover:text-door-black transition-colors duration-300">
-                    Подробнее
-                  </button>
+                <div className="absolute bottom-6 right-6 w-10 h-10 bg-door-light rounded-full flex items-center justify-center transform translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300">
+                  <ArrowRight className="w-5 h-5 text-door-black" />
                 </div>
               </div>
             </div>
-          ))}
-        </div>
-
-        {/* View All Button */}
-        <div className="flex justify-center mt-12">
-          <Link 
-            to="/catalog"
-            className="group inline-flex items-center gap-3 px-8 py-4 bg-door-light hover:bg-door-black hover:text-white font-medium rounded-full transition-all duration-300"
-          >
-            Смотреть все товары
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
           </Link>
-        </div>
+        ))}
       </div>
     </section>
   );

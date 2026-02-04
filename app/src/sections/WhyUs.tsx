@@ -1,195 +1,116 @@
-import { useEffect, useRef, useState } from 'react';
-import { Gem, Hammer, ShieldCheck, Truck, RefreshCw, Headphones } from 'lucide-react';
+import { useEffect, useRef } from 'react';
+import { Gem, Hammer, ShieldCheck } from 'lucide-react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 
-gsap.registerPlugin(ScrollTrigger);
-
-interface Feature {
-  icon: React.ElementType;
-  title: string;
-  description: string;
-  color: string;
-}
-
-const features: Feature[] = [
+const features = [
   {
     icon: Gem,
     title: 'Премиальные материалы',
-    description:
-      'Мы используем только лучшие материалы: массивную латунь, бронзу и нержавеющую сталь аэрокосмического класса для вечной красоты и прочности.',
-    color: 'from-amber-500 to-orange-500',
+    description: 'Массивная латунь, бронза и сталь для вечной красоты.',
+    color: 'bg-amber-100',
+    accent: 'text-amber-600',
+    rotation: -15
   },
   {
     icon: Hammer,
     title: 'Ручное качество',
-    description:
-      'Каждое изделие тщательно создано мастерами с десятилетиями опыта, обеспечивая совершенство в каждой детали.',
-    color: 'from-gray-600 to-gray-800',
+    description: 'Создано мастерами с десятилетиями опыта.',
+    color: 'bg-gray-100',
+    accent: 'text-gray-800',
+    rotation: 0
   },
   {
     icon: ShieldCheck,
     title: 'Пожизненная гарантия',
-    description:
-      'Мы полностью поддерживаем нашу продукцию с комплексной пожизненной гарантией, даря вам спокойствие на поколения вперед.',
-    color: 'from-emerald-500 to-green-500',
-  },
-  {
-    icon: Truck,
-    title: 'Бесплатная доставка',
-    description:
-      'Наслаждайтесь бесплатной доставкой по всему миру на заказы от $100. Экспресс-доставка доступна для срочных проектов.',
-    color: 'from-blue-500 to-indigo-500',
-  },
-  {
-    icon: RefreshCw,
-    title: 'Легкий возврат',
-    description:
-      '30-дневная политика возврата без хлопот на все товары. Не удовлетворены? Мы все исправим, без лишних вопросов.',
-    color: 'from-violet-500 to-purple-500',
-  },
-  {
-    icon: Headphones,
-    title: 'Экспертная поддержка',
-    description:
-      'Наши специалисты-консультанты всегда готовы помочь вам выбрать идеальную фурнитуру для вашего проекта.',
-    color: 'from-rose-500 to-pink-500',
+    description: 'Мы гарантируем качество на поколения вперед.',
+    color: 'bg-emerald-100',
+    accent: 'text-emerald-600',
+    rotation: 15
   },
 ];
 
 const WhyUs = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const orbitRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        '.whyus-heading',
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 75%',
-          },
+  useGSAP(() => {
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 1,
+      }
+    });
+
+    // Orbit Rotation on Scroll
+    tl.fromTo(orbitRef.current,
+      { rotate: -5 },
+      { rotate: 5, ease: 'none' }
+    );
+
+    // Icon Draw Animation (Entrance)
+    gsap.fromTo('.feature-icon path, .feature-icon polyline, .feature-icon line, .feature-icon circle',
+      { strokeDasharray: 100, strokeDashoffset: 100 },
+      {
+        strokeDashoffset: 0,
+        duration: 1.5,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 60%',
         }
-      );
+      }
+    );
 
-      gsap.fromTo(
-        '.feature-card',
-        { opacity: 0, y: 40, rotateX: -10 },
-        {
-          opacity: 1,
-          y: 0,
-          rotateX: 0,
-          duration: 0.7,
-          stagger: 0.1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.features-grid',
-            start: 'top 80%',
-          },
-        }
-      );
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
+  }, { scope: sectionRef });
 
   return (
-    <section
-      id="why-us"
-      ref={sectionRef}
-      className="relative w-full py-24 lg:py-32 bg-white overflow-hidden"
-    >
-      {/* Background decoration */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-20 left-10 w-64 h-64 bg-door-accent/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl" />
+    <section ref={sectionRef} id="why-us" className="relative w-full py-32 bg-white overflow-hidden">
+
+      <div className="container mx-auto px-4 text-center mb-20 relative z-10">
+        <span className="text-sm font-medium text-door-accent uppercase tracking-wider mb-4 block">
+          Почему выбирают нас
+        </span>
+        <h2 className="font-display text-4xl sm:text-5xl font-bold text-door-black mb-6">
+          Разница в <span className="italic font-serif text-door-medium">Деталях</span>
+        </h2>
       </div>
 
-      <div className="relative w-full px-4 sm:px-6 lg:px-12 xl:px-20">
-        {/* Header */}
-        <div className="whyus-heading text-center max-w-3xl mx-auto mb-16">
-          <span className="text-sm font-medium text-door-accent uppercase tracking-wider mb-4 block">
-            Почему выбирают нас
-          </span>
-          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-door-black tracking-tight mb-6">
-            Разница в{' '}
-            <span className="relative inline-block">
-              деталях
-              <svg
-                className="absolute -bottom-2 left-0 w-full"
-                viewBox="0 0 100 8"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M2 6C25 2 75 2 98 6"
-                  stroke="#4a90e2"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </span>
-          </h2>
-          <p className="text-lg text-door-medium leading-relaxed">
-            Узнайте, почему архитекторы, дизайнеры и домовладельцы по всему миру
-            доверяют нам свои самые важные проекты.
-          </p>
-        </div>
-
-        {/* Features Grid */}
-        <div className="features-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((feature, index) => (
+      {/* Orbit Container */}
+      <div className="relative w-full h-[600px] flex justify-center overflow-hidden">
+        {/* Virtual pivot point far below */}
+        <div
+          ref={orbitRef}
+          className="absolute top-[100px] w-[2000px] h-[2000px] flex justify-center items-start origin-center transition-transform"
+          style={{ transformOrigin: '50% 2000px' }} // Pivot point
+        >
+          {/* Cards distributed on the arc */}
+          {features.map((feature, i) => (
             <div
-              key={index}
-              className={`feature-card group relative p-8 bg-door-light rounded-3xl transition-all duration-500 cursor-pointer ${
-                hoveredIndex !== null && hoveredIndex !== index
-                  ? 'opacity-50 scale-[0.98]'
-                  : ''
-              }`}
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
-              style={{ perspective: '1000px' }}
+              key={i}
+              className="absolute top-0 w-[350px] p-8 bg-white rounded-3xl shadow-elevated border border-gray-100 group hover:-translate-y-4 transition-transform duration-300"
+              style={{
+                left: '50%',
+                marginLeft: '-175px', // Center the card
+                transform: `rotate(${feature.rotation}deg) translateY(0px)`,
+                transformOrigin: '50% 2000px' // Same pivot for distribution
+              }}
             >
-              {/* Gradient overlay on hover */}
-              <div
-                className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}
-              />
+              {/* Correct counter-rotation for content if needed, but for orbit effect we usually keep it aligned to radius or upright. Design says "arranged in a gentle arc". */}
 
-              {/* Icon */}
-              <div className="relative w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-6 shadow-soft group-hover:shadow-card transition-shadow duration-500 group-hover:-translate-y-1 group-hover:scale-105 transform">
-                <feature.icon className="w-8 h-8 text-door-dark group-hover:text-door-accent transition-colors duration-300" />
+              <div className={`w-16 h-16 rounded-2xl ${feature.color} flex items-center justify-center mb-6 mx-auto group-hover:scale-110 transition-transform`}>
+                <feature.icon className={`w-8 h-8 ${feature.accent} feature-icon`} strokeWidth={1.5} />
               </div>
 
-              {/* Content */}
-              <h3 className="font-display text-xl font-semibold text-door-black mb-3 group-hover:text-door-accent transition-colors duration-300">
-                {feature.title}
-              </h3>
-              <p className="text-door-medium leading-relaxed">
-                {feature.description}
-              </p>
-
-              {/* Arrow indicator */}
-              <div className="absolute bottom-8 right-8 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
-                <svg
-                  className="w-6 h-6 text-door-accent"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </div>
+              <h3 className="text-xl font-bold font-display text-door-black mb-3">{feature.title}</h3>
+              <p className="text-door-medium">{feature.description}</p>
             </div>
           ))}
         </div>
       </div>
+
     </section>
   );
 };

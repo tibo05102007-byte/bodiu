@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-import Lenis from '@studio-freight/lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -15,36 +13,11 @@ import Footer from '../sections/Footer';
 gsap.registerPlugin(ScrollTrigger);
 
 function HomePage() {
-  useEffect(() => {
-    // Initialize Lenis smooth scroll
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
-      smoothWheel: true,
-    });
-
-    // Connect Lenis to GSAP ScrollTrigger
-    lenis.on('scroll', ScrollTrigger.update);
-
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000);
-    });
-
-    gsap.ticker.lagSmoothing(0);
-
-    // Cleanup
-    return () => {
-      lenis.destroy();
-      gsap.ticker.remove(lenis.raf);
-    };
-  }, []);
-
   return (
-    <div className="relative min-h-screen bg-white">
+    <div className="relative min-h-screen">
       <Navigation />
-      <main>
+      <main className="relative z-10 bg-white mb-[100vh] sm:mb-[600px] lg:mb-[500px]">
+        {/* Helper helper class to adjust margin bottom dynamically via JS in Footer or manually set approximate height */}
         <Hero />
         <Products />
         <About />

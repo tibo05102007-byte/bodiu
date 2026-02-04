@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowLeft, Filter, ChevronDown, Grid3X3, LayoutList, ShoppingCart, Heart, Share2 } from 'lucide-react';
+import { ArrowLeft, Filter, ChevronDown, Grid3X3, LayoutList, ShoppingCart, Heart, Share2, X } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -12,8 +12,8 @@ interface Product {
   oldPrice?: number;
   image: string;
   category: string;
+  subcategory?: string;
   colors: string[];
-  material?: string;
   inStock: boolean;
   isNew?: boolean;
   isBestseller?: boolean;
@@ -21,125 +21,200 @@ interface Product {
   description?: string;
 }
 
+interface SubCategory {
+  id: string;
+  name: string;
+}
+
 interface Category {
   id: string;
   name: string;
   description: string;
   bannerImage: string;
-  productCount: number;
+  subcategories?: SubCategory[];
 }
 
-// Здесь будут твои категории - пока placeholder
 const categories: Category[] = [
   {
-    id: 'ruchki',
-    name: 'Дверные ручки',
-    description: 'Премиальные дверные ручки из латуни, нержавеющей стали и алюминия',
-    bannerImage: '/images/hero-handle.jpg',
-    productCount: 0,
+    id: 'handles',
+    name: 'Ручки',
+    description: 'Основной элемент дизайна. Аллюминиевые и цинковые решения.',
+    bannerImage: '/images/products/alfa-black.jpg',
+    subcategories: [
+      { id: 'aluminum', name: 'Аллюминиевые' },
+      { id: 'zinc', name: 'Цинковые' }
+    ]
   },
   {
-    id: 'zashchelki',
-    name: 'Защелки',
-    description: 'Надежные защелки для межкомнатных дверей',
-    bannerImage: '/images/black-brass-handle.jpg',
-    productCount: 0,
+    id: 'mechanisms',
+    name: 'Дверные механизмы',
+    description: 'Надежные механизмы для любых типов дверей.',
+    bannerImage: '/images/products/mechanism-magnetic.jpg',
+    subcategories: [
+      { id: 'magnetic', name: 'Магнитные' },
+      { id: 'plastic', name: 'Пластиковые' },
+      { id: 'metal', name: 'Металлические' }
+    ]
   },
   {
-    id: 'zadvizhki',
+    id: 'cylinders',
+    name: 'Цилиндровые механизмы',
+    description: 'Высокая секретность и защита.',
+    bannerImage: '/images/products/cylinder.png',
+  },
+  {
+    id: 'latches',
+    name: 'Защёлки',
+    description: 'Плавное и тихое закрывание.',
+    bannerImage: '/images/products/latch.jpg',
+  },
+  {
+    id: 'bolts',
     name: 'Задвижки',
-    description: 'Задвижки различных размеров и конфигураций',
-    bannerImage: '/images/premium-handle.jpg',
-    productCount: 0,
+    description: 'Дополнительная безопасность.',
+    bannerImage: '/images/products/deadbolt.jpg',
   },
   {
-    id: 'petli',
+    id: 'hinges',
     name: 'Петли',
-    description: 'Петли для дверей любого веса и размера',
-    bannerImage: '/images/brass-handle.jpg',
-    productCount: 0,
+    description: 'Долговечность и плавный ход.',
+    bannerImage: '/images/products/hinge-overlay.jpg',
+    subcategories: [
+      { id: 'overlay', name: 'Накладные' },
+      { id: 'mortise', name: 'Врезные' }
+    ]
   },
   {
-    id: 'nakladki',
+    id: 'escutcheons',
     name: 'Накладки цилиндровые',
-    description: 'Декоративные накладки для цилиндров',
-    bannerImage: '/images/luxury-handle.jpg',
-    productCount: 0,
+    description: 'Декоративное оформление скважин.',
+    bannerImage: '/images/products/escutcheon.jpg',
   },
   {
-    id: 'wc',
+    id: 'wc_kits',
     name: 'WC комплекты',
-    description: 'Комплекты для санузлов',
-    bannerImage: '/images/designer-handle.jpg',
-    productCount: 0,
+    description: 'Удобные фиксаторы для санузлов.',
+    bannerImage: '/images/products/wc-kit.jpg',
   },
   {
-    id: 'upory',
+    id: 'plate_locks',
+    name: 'Замки на планке',
+    description: 'Классические решения для массивных дверей.',
+    bannerImage: '/images/products/mechanism-magnetic.jpg',
+  },
+  {
+    id: 'door_stops',
     name: 'Упоры дверные',
-    description: 'Упоры для защиты стен и дверей',
-    bannerImage: '/images/minimalist-handle.png',
-    productCount: 0,
+    description: 'Защита стен и дверных полотен.',
+    bannerImage: '/images/products/door-stop.jpg',
   },
   {
-    id: 'razdvizhnye',
+    id: 'sliding_systems',
     name: 'Раздвижные системы',
-    description: 'Системы для раздвижных дверей',
-    bannerImage: '/images/modern-minimalist.jpg',
-    productCount: 0,
+    description: 'Экономия пространства и современный стиль.',
+    bannerImage: '/images/products/terra-sn.jpg',
   },
+  {
+    id: 'fittings',
+    name: 'Фурнитура',
+    description: 'Аксессуары и комплектующие.',
+    bannerImage: '/images/products/cube-white.jpg',
+  }
 ];
 
-// Здесь будут твои товары - пока placeholder
 const products: Product[] = [
-  // Товары будут добавлены по мере получения данных
+  // --- РУЧКИ (Handles) ---
+  // Aluminum (~5k - 8k KZT)
+  { id: 101, name: 'Axe Aluminum Black', category: 'handles', subcategory: 'aluminum', price: 7450, image: '/images/products/handle-aluminum-axe.jpg', colors: ['#000000'], inStock: true },
+  { id: 102, name: 'Blade Aluminum Satin', category: 'handles', subcategory: 'aluminum', price: 7950, image: '/images/products/handle-aluminum-blade.jpg', colors: ['#c0c0c0'], inStock: true, isBestseller: true },
+
+  // Zinc (~9k - 18k KZT)
+  { id: 103, name: 'Alfa Zinc Black', category: 'handles', subcategory: 'zinc', price: 9450, image: '/images/products/alfa-black.jpg', colors: ['#000000'], inStock: true, isNew: true },
+  { id: 104, name: 'Classic Zinc Antique', category: 'handles', subcategory: 'zinc', price: 13950, image: '/images/products/classic-ab.jpg', colors: ['#8b7355'], inStock: true },
+  { id: 105, name: 'Cube Zinc White', category: 'handles', subcategory: 'zinc', price: 9950, image: '/images/products/cube-white.jpg', colors: ['#ffffff'], inStock: true },
+  { id: 106, name: 'Elita Zinc Bronze', category: 'handles', subcategory: 'zinc', price: 17450, image: '/images/products/elita-br.jpg', colors: ['#cd7f32'], inStock: true },
+  { id: 107, name: 'Fina Zinc Gold', category: 'handles', subcategory: 'zinc', price: 15950, image: '/images/products/fina-ab.jpg', colors: ['#d4af37'], inStock: true },
+  { id: 108, name: 'Modena Zinc Black', category: 'handles', subcategory: 'zinc', price: 11450, image: '/images/products/modena-black.jpg', colors: ['#000000'], inStock: true },
+
+  // --- ДВЕРНЫЕ МЕХАНИЗМЫ ---
+  // Magnetic
+  { id: 201, name: 'Магнитный замок Silent M', category: 'mechanisms', subcategory: 'magnetic', price: 2750, image: '/images/products/mechanism-magnetic.jpg', colors: ['#1a1a1a'], inStock: true, description: 'Бесшумный магнитный язычок.' },
+
+  // Metal
+  { id: 202, name: 'Механизм металлический 100', category: 'mechanisms', subcategory: 'metal', price: 1750, image: '/images/products/mechanism-metal.png', colors: ['#c0c0c0'], inStock: true },
+
+  // Plastic (Placeholder)
+  { id: 203, name: 'Механизм композитный', category: 'mechanisms', subcategory: 'plastic', price: 1250, image: '/images/products/mechanism-magnetic.jpg', colors: ['#ffffff'], inStock: true },
+
+  // --- ЦИЛИНДРОВЫЕ МЕХАНИЗМЫ ---
+  { id: 301, name: 'Цилиндр 60мм Никель', category: 'cylinders', price: 2000, image: '/images/products/cylinder.png', colors: ['#c0c0c0'], inStock: true },
+  { id: 302, name: 'Цилиндр 70мм Ключ/Вертушка', category: 'cylinders', price: 2750, image: '/images/products/cylinder.png', colors: ['#d4af37'], inStock: true },
+
+  // --- ЗАЩЕЛКИ ---
+  { id: 401, name: 'Защелка 45мм', category: 'latches', price: 750, image: '/images/products/latch.jpg', colors: ['#c0c0c0'], inStock: true },
+
+  // --- ЗАДВИЖКИ ---
+  { id: 451, name: 'Задвижка ригель', category: 'bolts', price: 1250, image: '/images/products/deadbolt.jpg', colors: ['#8b4513'], inStock: true },
+
+  // --- ПЕТЛИ ---
+  // Overlay
+  { id: 501, name: 'Петля бабочка 100мм', category: 'hinges', subcategory: 'overlay', price: 600, image: '/images/products/hinge-overlay.jpg', colors: ['#c0c0c0'], inStock: true },
+
+  // Mortise
+  { id: 502, name: 'Петля врезная подшипник', category: 'hinges', subcategory: 'mortise', price: 900, image: '/images/products/hinge-overlay.jpg', colors: ['#d4af37'], inStock: true },
+
+  // --- НАКЛАДКИ ЦИЛИНДРОВЫЕ ---
+  { id: 601, name: 'Накладка квадратная', category: 'escutcheons', price: 1000, image: '/images/products/escutcheon.jpg', colors: ['#c0c0c0'], inStock: true },
+
+  // --- WC КОМПЛЕКТЫ ---
+  { id: 701, name: 'WC фиксатор Квадрат', category: 'wc_kits', price: 2250, image: '/images/products/wc-kit.jpg', colors: ['#000000'], inStock: true },
+
+  // --- ЗАМКИ НА ПЛАНКЕ ---
+  { id: 801, name: 'Замок на планке Classic', category: 'plate_locks', price: 4500, image: '/images/products/mechanism-magnetic.jpg', colors: ['#d4af37'], inStock: true },
+
+  // --- УПОРЫ ДВЕРНЫЕ ---
+  { id: 901, name: 'Упор дверной напольный', category: 'door_stops', price: 600, image: '/images/products/door-stop.jpg', colors: ['#c0c0c0'], inStock: true },
+
+  // --- РАЗДВИЖНЫЕ СИСТЕМЫ ---
+  { id: 1001, name: 'Комплект раздвижной', category: 'sliding_systems', price: 15450, image: '/images/products/terra-sn.jpg', colors: ['#c0c0c0'], inStock: true },
+
+  // --- ФУРНИТУРА ---
+  { id: 1101, name: 'Шаблон для врезки', category: 'fittings', price: 5000, image: '/images/products/cube-white.jpg', colors: ['orange'], inStock: true }
 ];
 
 const CategoryPage = () => {
-  const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [activeCategory, setActiveCategory] = useState<string>('handles');
+  const [activeSubCategory, setActiveSubCategory] = useState<string | null>(null);
+
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState<string>('popular');
-  const [showFilters, setShowFilters] = useState(false);
   const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
-  
+
   const pageRef = useRef<HTMLDivElement>(null);
   const productsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    setActiveSubCategory(null);
+  }, [activeCategory]);
+
+  useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.fromTo(
-        '.category-banner',
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          ease: 'power3.out',
-        }
-      );
-
-      gsap.fromTo(
-        '.category-card',
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.categories-grid',
-            start: 'top 85%',
-          },
-        }
+        '.category-pill',
+        { opacity: 0, y: 10 },
+        { opacity: 1, y: 0, stagger: 0.05, duration: 0.5, ease: 'power2.out' }
       );
     }, pageRef);
-
     return () => ctx.revert();
   }, []);
 
-  const filteredProducts = activeCategory === 'all' 
-    ? products 
-    : products.filter(p => p.category === activeCategory);
+  const currentCategoryData = categories.find(c => c.id === activeCategory);
+
+  const filteredProducts = products.filter(p => {
+    if (p.category !== activeCategory) return false;
+    if (activeSubCategory && p.subcategory !== activeSubCategory) return false;
+    return true;
+  });
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     switch (sortBy) {
@@ -170,317 +245,186 @@ const CategoryPage = () => {
             </a>
             <nav className="hidden md:flex items-center gap-8">
               <a href="/" className="text-sm font-medium text-door-dark hover:text-door-black">Главная</a>
-              <a href="#products" className="text-sm font-medium text-door-black">Каталог</a>
-              <a href="#about" className="text-sm font-medium text-door-dark hover:text-door-black">О нас</a>
-              <a href="#contact" className="text-sm font-medium text-door-dark hover:text-door-black">Контакты</a>
+              <button className="text-sm font-medium text-door-black">Каталог</button>
+              <a href="/#about" className="text-sm font-medium text-door-dark hover:text-door-black">О нас</a>
+              <a href="/#contact" className="text-sm font-medium text-door-dark hover:text-door-black">Контакты</a>
             </nav>
             <button className="relative p-2 hover:bg-door-light rounded-full">
               <ShoppingCart className="w-5 h-5 text-door-dark" />
               <span className="absolute -top-1 -right-1 w-5 h-5 bg-door-black text-white text-xs font-medium rounded-full flex items-center justify-center">
-                0
+                {products.length}
               </span>
             </button>
           </div>
         </div>
       </header>
 
-      {/* Banner */}
-      <section className="category-banner relative h-[400px] lg:h-[500px] overflow-hidden">
-        <div className="absolute inset-0">
-          <img 
-            src="/images/hero-handle.jpg" 
-            alt="Каталог" 
+      {/* Banner - WELCOME IMAGE FIXED */}
+      <section className="relative h-[300px] lg:h-[400px] overflow-hidden bg-door-black">
+        <div className="absolute inset-0 opacity-100">
+          <img
+            src="/images/catalog-hero.jpg"
+            alt="Banner"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-door-black/80 via-door-black/50 to-transparent" />
         </div>
-        <div className="relative h-full flex items-center">
-          <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20">
-            <div className="max-w-2xl">
-              <a 
-                href="/" 
-                className="inline-flex items-center gap-2 text-white/70 hover:text-white mb-4 transition-colors"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                На главную
-              </a>
-              <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4">
-                Каталог
-              </h1>
-              <p className="text-lg text-white/80 mb-8">
-                Выберите категорию дверной фурнитуры или просмотрите все товары
-              </p>
-              <button 
-                onClick={scrollToProducts}
-                className="px-8 py-4 bg-white text-door-black font-medium rounded-full hover:bg-door-light transition-colors"
-              >
-                Смотреть товары
-              </button>
-            </div>
-          </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-door-black via-transparent to-transparent opacity-80" />
+
+        <div className="relative h-full flex flex-col justify-end pb-12 w-full px-4 sm:px-6 lg:px-12 xl:px-20">
+          <h1 className="font-display text-4xl sm:text-5xl font-bold text-white mb-2">
+            {currentCategoryData?.name}
+          </h1>
+          <p className="text-white/80 max-w-xl text-lg">
+            {currentCategoryData?.description}
+          </p>
         </div>
       </section>
 
-      {/* Categories Grid */}
-      <section className="py-16 lg:py-24 bg-door-light">
-        <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20">
-          <h2 className="font-display text-2xl sm:text-3xl font-bold text-door-black mb-8">
-            Категории
-          </h2>
-          <div className="categories-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {categories.map((category) => (
-              <div
-                key={category.id}
-                className="category-card group relative bg-white rounded-2xl overflow-hidden shadow-soft hover:shadow-card transition-all duration-300 cursor-pointer"
-                onClick={() => {
-                  setActiveCategory(category.id);
-                  scrollToProducts();
-                }}
+      {/* Categories Filter (12 Items) */}
+      <section className="sticky top-[73px] z-40 bg-white/95 backdrop-blur border-b border-gray-100 shadow-sm py-4">
+        <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 overflow-x-auto no-scrollbar">
+          <div className="flex gap-2 sm:gap-4 min-w-max">
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => { setActiveCategory(cat.id); setViewMode('grid'); scrollToProducts(); }}
+                className={`
+                           category-pill px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 whitespace-nowrap
+                           ${activeCategory === cat.id
+                    ? 'bg-door-black text-white shadow-md scale-105'
+                    : 'bg-door-light text-door-dark hover:bg-gray-200'}
+                        `}
               >
-                <div className="aspect-[4/3] overflow-hidden">
-                  <img
-                    src={category.bannerImage}
-                    alt={category.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                </div>
-                <div className="p-5">
-                  <h3 className="font-display font-semibold text-door-black group-hover:text-door-accent transition-colors">
-                    {category.name}
-                  </h3>
-                  <p className="text-sm text-door-medium mt-1 line-clamp-2">
-                    {category.description}
-                  </p>
-                  <span className="inline-flex items-center gap-1 text-sm text-door-accent mt-3">
-                    {category.productCount} товаров
-                    <ArrowLeft className="w-4 h-4 rotate-180" />
-                  </span>
-                </div>
-              </div>
+                {cat.name}
+              </button>
             ))}
           </div>
         </div>
+
+        {/* Subcategories */}
+        {currentCategoryData?.subcategories && (
+          <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 mt-4 border-t border-gray-100 pt-3">
+            <div className="flex gap-3 items-center text-sm">
+              <span className="text-door-medium mr-2">Фильтр:</span>
+              <button
+                onClick={() => setActiveSubCategory(null)}
+                className={`px-3 py-1 rounded-md transition-colors ${activeSubCategory === null ? 'bg-gray-200 font-semibold' : 'hover:bg-gray-100'}`}
+              >
+                Все
+              </button>
+              {currentCategoryData.subcategories.map(sub => (
+                <button
+                  key={sub.id}
+                  onClick={() => setActiveSubCategory(sub.id)}
+                  className={`px-3 py-1 rounded-md transition-colors ${activeSubCategory === sub.id ? 'bg-gray-200 font-semibold' : 'hover:bg-gray-100'}`}
+                >
+                  {sub.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </section>
 
-      {/* Products Section */}
-      <section ref={productsRef} className="py-16 lg:py-24 bg-white">
+      {/* Products Grid */}
+      <section ref={productsRef} className="py-12 bg-white min-h-[500px]">
         <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20">
-          {/* Filters Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-8 pb-8 border-b border-door-border">
-            <div className="flex items-center gap-4">
-              <h2 className="font-display text-2xl font-bold text-door-black">
-                {activeCategory === 'all' ? 'Все товары' : categories.find(c => c.id === activeCategory)?.name}
-              </h2>
-              <span className="text-door-medium">
-                ({sortedProducts.length} товаров)
-              </span>
-            </div>
-            
-            <div className="flex items-center gap-4">
-              {/* View Mode Toggle */}
-              <div className="hidden sm:flex items-center gap-1 bg-door-light rounded-lg p-1">
-                <button
-                  onClick={() => setViewMode('grid')}
-                  className={`p-2 rounded-md transition-colors ${
-                    viewMode === 'grid' ? 'bg-white shadow-sm' : 'hover:bg-white/50'
-                  }`}
-                >
-                  <Grid3X3 className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => setViewMode('list')}
-                  className={`p-2 rounded-md transition-colors ${
-                    viewMode === 'list' ? 'bg-white shadow-sm' : 'hover:bg-white/50'
-                  }`}
-                >
-                  <LayoutList className="w-4 h-4" />
-                </button>
-              </div>
 
-              {/* Sort Dropdown */}
-              <div className="relative">
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="appearance-none px-4 py-2 pr-10 bg-door-light rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-door-accent"
-                >
-                  <option value="popular">По популярности</option>
-                  <option value="price-asc">Цена: по возрастанию</option>
-                  <option value="price-desc">Цена: по убыванию</option>
-                  <option value="newest">Сначала новые</option>
-                </select>
-                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" />
-              </div>
+          {/* Controls */}
+          <div className="flex justify-between items-center mb-6">
+            <span className="text-door-medium">
+              Найдено: {sortedProducts.length}
+            </span>
 
-              {/* Filter Button */}
-              <button
-                onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center gap-2 px-4 py-2 bg-door-light rounded-lg hover:bg-door-border transition-colors"
+            <div className="flex items-center gap-4">
+              <div className="hidden sm:flex bg-gray-100 rounded-lg p-1">
+                <button onClick={() => setViewMode('grid')} className={`p-1.5 rounded ${viewMode === 'grid' ? 'bg-white shadow' : ''}`}><Grid3X3 className="w-4 h-4" /></button>
+                <button onClick={() => setViewMode('list')} className={`p-1.5 rounded ${viewMode === 'list' ? 'bg-white shadow' : ''}`}><LayoutList className="w-4 h-4" /></button>
+              </div>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="bg-gray-100 border-none rounded-lg text-sm px-3 py-2 cursor-pointer focus:ring-0"
               >
-                <Filter className="w-4 h-4" />
-                <span className="hidden sm:inline">Фильтры</span>
-              </button>
+                <option value="popular">Популярные</option>
+                <option value="newest">Новинки</option>
+                <option value="price-asc">Сначала дешевые</option>
+                <option value="price-desc">Сначала дороги</option>
+              </select>
             </div>
           </div>
 
-          {/* Products Grid/List */}
+          {/* Grid */}
           {sortedProducts.length > 0 ? (
-            <div className={`grid gap-6 ${
-              viewMode === 'grid' 
-                ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' 
+            <div className={`grid gap-6 ${viewMode === 'grid'
+                ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
                 : 'grid-cols-1'
-            }`}>
+              }`}>
               {sortedProducts.map((product) => (
                 <div
                   key={product.id}
-                  className={`group relative bg-door-light rounded-2xl overflow-hidden transition-all duration-300 ${
-                    viewMode === 'list' ? 'flex gap-6' : ''
-                  }`}
+                  className={`group relative bg-door-light rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-lg ${viewMode === 'list' ? 'flex gap-6 items-center' : ''
+                    }`}
                   onMouseEnter={() => setHoveredProduct(product.id)}
                   onMouseLeave={() => setHoveredProduct(null)}
                 >
                   {/* Image */}
-                  <div className={`relative overflow-hidden bg-white ${
-                    viewMode === 'list' ? 'w-48 flex-shrink-0' : 'aspect-[4/5]'
-                  }`}>
+                  <div className={`relative overflow-hidden bg-white p-6 ${viewMode === 'list' ? 'w-48 h-48 shrink-0' : 'aspect-[4/5]'
+                    }`}>
                     <img
                       src={product.image}
                       alt={product.name}
-                      className={`w-full h-full object-cover transition-all duration-700 ${
-                        hoveredProduct === product.id ? 'scale-110' : 'scale-100'
-                      }`}
+                      className={`w-full h-full object-contain transition-all duration-700 ${hoveredProduct === product.id ? 'scale-110' : 'scale-100'
+                        }`}
                     />
-                    
+
                     {/* Badges */}
                     <div className="absolute top-3 left-3 flex flex-col gap-2">
-                      {product.isNew && (
-                        <span className="px-2 py-1 bg-door-accent text-white text-xs font-medium rounded-full">
-                          Новинка
-                        </span>
-                      )}
-                      {product.isSale && (
-                        <span className="px-2 py-1 bg-red-500 text-white text-xs font-medium rounded-full">
-                          Скидка
-                        </span>
-                      )}
-                      {product.isBestseller && (
-                        <span className="px-2 py-1 bg-door-black text-white text-xs font-medium rounded-full">
-                          Хит
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Quick Actions */}
-                    <div className={`absolute bottom-3 right-3 flex gap-2 transition-all duration-300 ${
-                      hoveredProduct === product.id 
-                        ? 'opacity-100 translate-y-0' 
-                        : 'opacity-0 translate-y-4'
-                    }`}>
-                      <button className="p-2 bg-white rounded-full shadow-card hover:bg-door-black hover:text-white transition-colors">
-                        <Heart className="w-4 h-4" />
-                      </button>
-                      <button className="p-2 bg-white rounded-full shadow-card hover:bg-door-black hover:text-white transition-colors">
-                        <Share2 className="w-4 h-4" />
-                      </button>
+                      {product.isNew && <span className="px-2 py-1 bg-door-accent text-white text-[10px] font-bold uppercase rounded">New</span>}
+                      {product.isBestseller && <span className="px-2 py-1 bg-door-black text-white text-[10px] font-bold uppercase rounded">Hit</span>}
                     </div>
                   </div>
 
-                  {/* Content */}
+                  {/* Info */}
                   <div className="p-5 flex-1">
-                    <span className="text-xs text-door-medium uppercase tracking-wider">
+                    <div className="text-xs text-door-medium uppercase tracking-wider mb-1">
                       {categories.find(c => c.id === product.category)?.name}
-                    </span>
-                    <h3 className="font-display font-semibold text-door-black mt-1 mb-2 group-hover:text-door-accent transition-colors">
-                      {product.name}
-                    </h3>
-                    
-                    {product.description && viewMode === 'list' && (
-                      <p className="text-sm text-door-medium mb-3 line-clamp-2">
-                        {product.description}
-                      </p>
-                    )}
-
-                    {/* Colors */}
-                    <div className="flex items-center gap-1 mb-3">
-                      {product.colors.map((color, index) => (
-                        <div
-                          key={index}
-                          className="w-5 h-5 rounded-full border-2 border-white shadow-xs"
-                          style={{ backgroundColor: color }}
-                          title={color}
-                        />
-                      ))}
+                      {product.subcategory && ` / ${categories.find(c => c.id === product.category)?.subcategories?.find(s => s.id === product.subcategory)?.name}`}
                     </div>
+                    <h3 className="font-display font-bold text-lg text-door-black mb-2">{product.name}</h3>
+                    {product.description && viewMode === 'list' && <p className="text-sm text-gray-500 mb-4">{product.description}</p>}
 
-                    {/* Price & Actions */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="font-display font-bold text-xl text-door-black">
-                          ${product.price}
-                        </span>
-                        {product.oldPrice && (
-                          <span className="text-sm text-door-medium line-through">
-                            ${product.oldPrice}
-                          </span>
-                        )}
-                      </div>
-                      <button className="p-3 bg-door-black text-white rounded-full hover:bg-door-accent transition-colors">
+                    <div className="flex items-center justify-between mt-4">
+                      <span className="text-lg font-bold">{product.price} ₸</span>
+                      <button className="w-10 h-10 rounded-full bg-door-black text-white flex items-center justify-center hover:bg-door-accent transition-colors">
                         <ShoppingCart className="w-4 h-4" />
                       </button>
                     </div>
-
-                    {!product.inStock && (
-                      <span className="text-sm text-red-500 mt-2 block">
-                        Нет в наличии
-                      </span>
-                    )}
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="text-center py-20">
-              <div className="w-20 h-20 bg-door-light rounded-full flex items-center justify-center mx-auto mb-6">
-                <ShoppingCart className="w-10 h-10 text-door-medium" />
-              </div>
-              <h3 className="font-display text-xl font-semibold text-door-black mb-2">
-                Товары скоро появятся
-              </h3>
-              <p className="text-door-medium max-w-md mx-auto mb-6">
-                Мы готовим для вас лучшие предложения. Загляните позже или свяжитесь с нами для консультации.
-              </p>
-              <a 
-                href="#contact" 
-                className="inline-flex items-center gap-2 px-6 py-3 bg-door-black text-white rounded-full hover:bg-door-dark transition-colors"
-              >
-                Связаться с нами
-              </a>
+            <div className="py-20 text-center">
+              <p className="text-xl text-gray-400">В этой категории пока нет товаров</p>
+              <button onClick={() => { setActiveSubCategory(null) }} className="mt-4 text-door-accent hover:underline">
+                Сбросить фильтры
+              </button>
             </div>
           )}
+
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-door-black text-white py-12">
-        <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
-                <span className="text-door-black font-display font-bold text-lg">D</span>
-              </div>
-              <span className="font-display font-semibold text-lg">DOORHANDLES</span>
+      <footer className="bg-door-black text-white py-12 border-t border-white/10">
+        <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 text-center md:text-left">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="flex items-center gap-2 mb-4 md:mb-0">
+              <div className="w-8 h-8 bg-white rounded flex items-center justify-center text-door-black font-bold">D</div>
+              <span className="font-bold text-lg">DOORHANDLES</span>
             </div>
-            <p className="text-white/60 text-sm">
-              © 2025 DOORHANDLES. Все права защищены.
-            </p>
-            <div className="flex items-center gap-6">
-              <a href="/" className="text-white/60 hover:text-white text-sm transition-colors">
-                Главная
-              </a>
-              <a href="#" className="text-white/60 hover:text-white text-sm transition-colors">
-                Политика конфиденциальности
-              </a>
-            </div>
+            <p className="text-white/50 text-sm">© 2025 Все права защищены.</p>
           </div>
         </div>
       </footer>

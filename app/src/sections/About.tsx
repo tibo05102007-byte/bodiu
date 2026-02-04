@@ -1,191 +1,111 @@
-import { useEffect, useRef } from 'react';
-import { Award, Users, Globe, Sparkles } from 'lucide-react';
+import { useRef } from 'react';
+import { ArrowUpRight } from 'lucide-react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
+import { useGSAP } from '@gsap/react';
 
 const About = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Image reveal animation
-      gsap.fromTo(
-        imageRef.current,
-        { clipPath: 'inset(100% 0 0 0)' },
-        {
-          clipPath: 'inset(0% 0 0 0)',
-          duration: 1.2,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 70%',
-          },
-        }
-      );
+  useGSAP(() => {
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: 'top 70%',
+        end: 'bottom 20%',
+        toggleActions: 'play none none reverse',
+      }
+    });
 
-      // Content animation
-      gsap.fromTo(
-        '.about-content > *',
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          stagger: 0.1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: contentRef.current,
-            start: 'top 75%',
-          },
-        }
-      );
+    // Image Mask Reveal
+    tl.fromTo(imageRef.current,
+      { clipPath: 'inset(100% 0 0 0)', scale: 1.1 },
+      { clipPath: 'inset(0% 0 0 0)', scale: 1, duration: 1.5, ease: 'power4.out' }
+    );
 
-      // Stats animation
-      gsap.fromTo(
-        '.about-stat',
-        { opacity: 0, y: 20 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          stagger: 0.15,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.about-stats',
-            start: 'top 85%',
-          },
-        }
-      );
-    }, sectionRef);
+    // Text Reveal (Staggered)
+    tl.fromTo('.about-text-line',
+      { y: 50, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: 'power3.out' },
+      '-=1.0'
+    );
 
-    return () => ctx.revert();
-  }, []);
+    // Parallax Effect
+    gsap.to(textRef.current, {
+      y: -50,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: true
+      }
+    });
 
-  const stats = [
-    { icon: Award, value: '25+', label: 'Дизайн наград' },
-    { icon: Users, value: '50K+', label: 'Довольных клиентов' },
-    { icon: Globe, value: '40+', label: 'Стран' },
-    { icon: Sparkles, value: '100%', label: 'Ручная работа' },
-  ];
+  }, { scope: sectionRef });
 
   return (
-    <section
-      id="about"
-      ref={sectionRef}
-      className="relative w-full py-24 lg:py-32 bg-door-light overflow-hidden"
-    >
-      <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          {/* Content */}
-          <div ref={contentRef} className="about-content order-2 lg:order-1">
-            <span className="text-sm font-medium text-door-accent uppercase tracking-wider mb-4 block">
-              О нас
+    <section ref={sectionRef} id="about" className="relative w-full py-24 lg:py-40 bg-white overflow-hidden">
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-12 xl:px-20 relative">
+        {/* Background Typography */}
+        <div className="absolute top-0 right-0 opacity-[0.03] pointer-events-none select-none">
+          <h2 className="text-[15vw] font-display font-bold leading-none">PRECISION</h2>
+        </div>
+
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-24 items-start">
+
+          {/* Text Block (Top Left - Floating) */}
+          <div ref={textRef} className="lg:col-span-5 relative z-20 pt-12 lg:pt-0">
+            <span className="about-text-line inline-block text-sm font-medium text-door-accent uppercase tracking-wider mb-4">
+              Наша история
             </span>
-
-            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-door-black tracking-tight mb-6">
-              Выкованы в{' '}
-              <span className="relative inline-block">
-                точности
-                <svg
-                  className="absolute -bottom-1 left-0 w-full"
-                  viewBox="0 0 150 8"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M2 6C40 2 110 2 148 6"
-                    stroke="#4a90e2"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </span>
+            <h2 className="about-text-line font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-door-black leading-[1.1] mb-8">
+              Выкованные в <br />
+              <span className="ml-12 italic font-serif text-door-dark/70">Точности</span>
             </h2>
-
-            <p className="text-lg text-door-medium leading-relaxed mb-6">
-              Более 15 лет мы создаем дверную фурнитуру, которая выходит за рамки
-              простой функциональности. Каждое изделие в нашей коллекции — это
-              воплощение веры в то, что мельчайшие детали могут преобразить
-              целое пространство.
-            </p>
-
-            <p className="text-lg text-door-medium leading-relaxed mb-8">
-              Наши мастера-кожевники сочетают традиционные техники с современными
-              инновациями, работая с премиальными материалами: массивной латунью,
-              бронзой и нержавеющей стелью аэрокосмического класса. Каждая ручка
-              тщательно разработана, спроектирована и обработана вручную в нашей
-              мастерской.
-            </p>
-
-            <div className="flex flex-wrap gap-4 mb-12">
-              <button className="px-6 py-3 bg-door-black text-white font-medium rounded-full hover:bg-door-dark transition-colors duration-300">
-                Наша философия
-              </button>
-              <button className="px-6 py-3 bg-white text-door-black font-medium rounded-full hover:bg-door-border transition-colors duration-300 border border-door-border">
-                Смотреть нашу историю
-              </button>
+            <div className="space-y-6 text-lg text-door-dark/80 leading-relaxed max-w-md">
+              <p className="about-text-line">
+                Мы верим, что дверная ручка — это первое рукопожатие дома. Это момент, когда архитектура становится осязаемой.
+              </p>
+              <p className="about-text-line">
+                С 2009 года мы объединяем промышленную точность с ремесленной душой, создавая фурнитуру, которая не просто открывает двери, но и открывает новые ощущения от пространства.
+              </p>
             </div>
 
-            {/* Stats */}
-            <div className="about-stats grid grid-cols-2 sm:grid-cols-4 gap-6">
-              {stats.map((stat, index) => (
-                <div key={index} className="about-stat text-center lg:text-left">
-                  <div className="inline-flex items-center justify-center w-12 h-12 bg-white rounded-xl mb-3 shadow-soft">
-                    <stat.icon className="w-6 h-6 text-door-accent" />
-                  </div>
-                  <div className="font-display text-2xl font-bold text-door-black">
-                    {stat.value}
-                  </div>
-                  <div className="text-sm text-door-medium">{stat.label}</div>
-                </div>
-              ))}
+            <div className="about-text-line mt-12">
+              <a href="#philosophy" className="group inline-flex items-center gap-2 text-door-black font-semibold border-b border-door-black pb-1 hover:text-door-accent hover:border-door-accent transition-colors duration-300">
+                Наша философия
+                <ArrowUpRight className="w-4 h-4 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" />
+              </a>
             </div>
           </div>
 
-          {/* Image */}
-          <div className="order-1 lg:order-2">
+          {/* Image Block (Bottom right - Anchored) */}
+          <div className="lg:col-span-7 relative">
             <div
               ref={imageRef}
-              className="relative rounded-3xl overflow-hidden shadow-elevated"
+              className="relative aspect-[4/3] w-full overflow-hidden rounded-sm"
             >
-              <div className="aspect-[4/3] lg:aspect-[3/4]">
-                <img
-                  src="/images/black-brass-handle.jpg"
-                  alt="Премиум дверная ручка мастерство"
-                  className="w-full h-full object-cover"
-                />
-              </div>
+              <img
+                src="/images/modern-minimalist.jpg"
+                alt="Process"
+                onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1549411984-48d886f7b9bd?q=80&w=2574&auto=format&fit=crop' }}
+                className="w-full h-full object-cover"
+              />
 
-              {/* Floating card */}
-              <div className="absolute bottom-6 left-6 right-6 p-5 bg-white/95 backdrop-blur-sm rounded-2xl shadow-card">
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 bg-door-accent/10 rounded-xl flex items-center justify-center">
-                    <svg
-                      className="w-7 h-7 text-door-accent"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <div className="font-display font-semibold text-door-black">
-                      Награжденный дизайн
-                    </div>
-                    <div className="text-sm text-door-medium">
-                      Red Dot Design Award 2024
-                    </div>
-                  </div>
-                </div>
+              {/* Floating Badge */}
+              <div className="absolute bottom-8 left-8 bg-white/90 backdrop-blur p-6 max-w-xs shadow-elevated hidden sm:block">
+                <p className="font-display font-bold text-3xl text-door-black mb-1">15+</p>
+                <p className="text-sm text-door-medium uppercase tracking-wide">Лет совершенства</p>
               </div>
             </div>
+
+            {/* Decorative Offset Image (Parallax layer potentially) */}
+            <div className="hidden lg:block absolute -bottom-20 -left-20 w-64 h-64 bg-door-light -z-10" />
           </div>
+
         </div>
       </div>
     </section>

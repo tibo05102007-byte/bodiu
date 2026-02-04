@@ -21,22 +21,41 @@ const Footer = () => {
   const [isSubscribed, setIsSubscribed] = useState(false);
 
   useEffect(() => {
+    // Dynamic Footer Height Adjustment for "Curtain Reveal"
+    const updateMargin = () => {
+      const footerHeight = sectionRef.current?.offsetHeight;
+      const main = document.querySelector('main');
+      if (main && footerHeight) {
+        main.style.marginBottom = `${footerHeight}px`;
+      }
+    };
+
+    updateMargin();
+    window.addEventListener('resize', updateMargin);
+
+    return () => window.removeEventListener('resize', updateMargin);
+  }, []);
+
+  useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        '.footer-content > *',
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.7,
-          stagger: 0.1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 85%',
-          },
+      // Parallax-like reveal effect happens naturally due to fixed position
+      // We can add some internal animations triggered when it comes into view
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: 'main', // Trigger when main ends
+          start: 'bottom bottom',
+          end: '+=100%',
+          toggleActions: 'play none none reverse',
         }
+      });
+
+      tl.fromTo(
+        '.footer-content-stagger > *',
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 0.8, stagger: 0.1, ease: 'power3.out' }
       );
+
     }, sectionRef);
 
     return () => ctx.revert();
@@ -88,13 +107,13 @@ const Footer = () => {
     <footer
       id="contact"
       ref={sectionRef}
-      className="relative w-full bg-door-black text-white overflow-hidden"
+      className="fixed bottom-0 left-0 w-full bg-door-black text-white overflow-hidden -z-10"
     >
       {/* Decorative gradient */}
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
       {/* Newsletter Section */}
-      <div className="footer-content border-b border-white/10">
+      <div className="footer-content-stagger border-b border-white/10">
         <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 py-16 lg:py-20">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
@@ -123,11 +142,10 @@ const Footer = () => {
                 <button
                   type="submit"
                   disabled={isSubscribed}
-                  className={`px-8 py-4 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-2 ${
-                    isSubscribed
+                  className={`px-8 py-4 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-2 ${isSubscribed
                       ? 'bg-green-500 text-white'
                       : 'bg-white text-door-black hover:bg-door-accent hover:text-white'
-                  }`}
+                    }`}
                 >
                   {isSubscribed ? (
                     <>
@@ -148,7 +166,7 @@ const Footer = () => {
       </div>
 
       {/* Main Footer Content */}
-      <div className="footer-content w-full px-4 sm:px-6 lg:px-12 xl:px-20 py-16">
+      <div className="footer-content-stagger w-full px-4 sm:px-6 lg:px-12 xl:px-20 py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand Column */}
           <div className="col-span-2 md:col-span-4 lg:col-span-1 mb-8 lg:mb-0">
@@ -161,7 +179,7 @@ const Footer = () => {
               </span>
             </div>
             <p className="text-white/60 text-sm leading-relaxed mb-6 max-w-xs">
-              Премиум дверная фурнитура, созданная с точностью и страстью. 
+              Премиум дверная фурнитура, созданная с точностью и страстью.
               Преображаем пространства с 2009 года.
             </p>
             <div className="flex items-center gap-3">

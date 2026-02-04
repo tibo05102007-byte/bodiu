@@ -1,22 +1,101 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ShoppingBag } from 'lucide-react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [cartCount] = useState(2);
+  const navRef = useRef<HTMLElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const isHomePage = location.pathname === '/';
 
+  // Scroll detection
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      const scrolled = window.scrollY > 100;
+      setIsScrolled(scrolled);
+      if (!scrolled) setIsExpanded(false);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // GSAP Animations for "Dynamic Island"
+  useGSAP(() => {
+    if (!navRef.current || !containerRef.current) return;
+
+    if (isScrolled && !isExpanded) {
+      // Compact Island Mode
+      gsap.to(containerRef.current, {
+        width: 'auto',
+        borderRadius: '9999px',
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        backdropFilter: 'blur(12px)',
+        padding: '0.75rem 1.5rem',
+        marginTop: '24px',
+        duration: 0.8,
+        ease: 'power4.out',
+        boxShadow: '0 8px 30px -4px rgba(0, 0, 0, 0.1)',
+      });
+
+      // Hide links in compact mode
+      gsap.to('.nav-links', {
+        opacity: 0,
+        width: 0,
+        display: 'none',
+        duration: 0.4,
+      });
+
+    } else if (isScrolled && isExpanded) {
+      // Expanded Island Mode (Hover)
+      gsap.to(containerRef.current, {
+        width: 'auto', // Allow it to grow
+        maxWidth: '90vw',
+        borderRadius: '9999px',
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: 'blur(16px)',
+        padding: '1rem 2rem',
+        marginTop: '24px',
+        duration: 0.6,
+        ease: 'back.out(1.2)',
+      });
+
+      gsap.to('.nav-links', {
+        display: 'flex',
+        opacity: 1,
+        width: 'auto',
+        duration: 0.4,
+        delay: 0.1,
+      });
+    } else {
+      // Default Top State
+      gsap.to(containerRef.current, {
+        width: '100%',
+        borderRadius: '0px',
+        backgroundColor: 'transparent',
+        backdropFilter: 'blur(0px)',
+        padding: '1.5rem 2rem', // px-8 py-6
+        marginTop: '0px',
+        duration: 0.8,
+        ease: 'power4.out',
+        boxShadow: 'none',
+        maxWidth: '100%', // Reset max-width
+      });
+
+      gsap.to('.nav-links', {
+        display: 'flex',
+        opacity: 1,
+        width: 'auto',
+        duration: 0.4,
+      });
+    }
+  }, [isScrolled, isExpanded]);
 
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
@@ -36,120 +115,123 @@ const Navigation = () => {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-cinematic ${
-          isScrolled || !isHomePage
-            ? 'py-3 bg-white/90 backdrop-blur-lg shadow-soft'
-            : 'py-5 bg-transparent'
-        }`}
+        ref={navRef}
+        className="fixed top-0 left-0 right-0 z-50 flex justify-center pointer-events-none"
       >
-        <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
-            <Link to="/" className="flex items-center gap-2 group">
-              <div className="w-10 h-10 bg-door-black rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                <span className="text-white font-display font-bold text-lg">D</span>
-              </div>
-              <span className="font-display font-semibold text-lg tracking-tight text-door-black">
-                DOORHANDLES
-              </span>
-            </Link>
-
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-8">
-              {navLinks.map((link) => (
-                link.isPage ? (
-                  <Link
-                    key={link.name}
-                    to={link.href}
-                    className="relative text-sm font-medium text-door-dark hover:text-door-black transition-colors duration-300 group"
-                  >
-                    {link.name}
-                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-door-black transition-all duration-300 group-hover:w-full" />
-                  </Link>
-                ) : (
-                  <button
-                    key={link.name}
-                    onClick={() => scrollToSection(link.href)}
-                    className="relative text-sm font-medium text-door-dark hover:text-door-black transition-colors duration-300 group"
-                  >
-                    {link.name}
-                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-door-black transition-all duration-300 group-hover:w-full" />
-                  </button>
-                )
-              ))}
+        <div
+          ref={containerRef}
+          className="flex items-center justify-between gap-8 pointer-events-auto transition-all"
+          onMouseEnter={() => isScrolled && setIsExpanded(true)}
+          onMouseLeave={() => isScrolled && setIsExpanded(false)}
+        >
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2 group shrink-0">
+            <div className="w-10 h-10 bg-door-black rounded-full flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-md">
+              <span className="text-white font-display font-bold text-lg">D</span>
             </div>
+            <span className={`font-display font-semibold text-lg tracking-tight text-door-black ${isScrolled && !isExpanded ? 'hidden sm:block' : 'block'}`}>
+              DOORHANDLES
+            </span>
+          </Link>
 
-            {/* Actions */}
-            <div className="flex items-center gap-4">
-              {/* Cart */}
-              <button className="relative p-2 hover:bg-door-light rounded-full transition-colors duration-300">
-                <ShoppingBag className="w-5 h-5 text-door-dark" />
-                {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-door-black text-white text-xs font-medium rounded-full flex items-center justify-center">
-                    {cartCount}
-                  </span>
-                )}
-              </button>
+          {/* Desktop Navigation */}
+          <div className="nav-links hidden md:flex items-center gap-6 overflow-hidden">
+            {navLinks.map((link) => (
+              link.isPage ? (
+                <Link
+                  key={link.name}
+                  to={link.href}
+                  className="relative text-sm font-medium text-door-dark hover:text-door-black transition-colors duration-300 whitespace-nowrap"
+                >
+                  {link.name}
+                </Link>
+              ) : (
+                <button
+                  key={link.name}
+                  onClick={() => scrollToSection(link.href)}
+                  className="relative text-sm font-medium text-door-dark hover:text-door-black transition-colors duration-300 whitespace-nowrap"
+                >
+                  {link.name}
+                </button>
+              )
+            ))}
+          </div>
 
-              {/* Mobile Menu Toggle */}
-              <button
-                className="md:hidden p-2 hover:bg-door-light rounded-full transition-colors duration-300"
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              >
-                {isMobileMenuOpen ? (
-                  <X className="w-6 h-6 text-door-dark" />
-                ) : (
-                  <Menu className="w-6 h-6 text-door-dark" />
-                )}
-              </button>
-            </div>
+          {/* Actions */}
+          <div className={`flex items-center gap-2 shrink-0 ${isScrolled && !isExpanded ? '' : 'ml-4'}`}>
+            <button
+              className="relative p-2.5 bg-door-light/50 hover:bg-door-medium/20 rounded-full transition-colors duration-300"
+              aria-label="Cart"
+            >
+              <ShoppingBag className="w-5 h-5 text-door-dark" />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-door-accent text-white text-xs font-bold rounded-full flex items-center justify-center border-2 border-white">
+                  {cartCount}
+                </span>
+              )}
+            </button>
+
+            <button
+              className="md:hidden p-2.5 bg-door-light/50 hover:bg-door-medium/20 rounded-full transition-colors duration-300"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Menu"
+            >
+              <Menu className="w-6 h-6 text-door-dark" />
+            </button>
           </div>
         </div>
       </nav>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu Overlay */}
       <div
-        className={`fixed inset-0 z-40 md:hidden transition-all duration-500 ${
-          isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
-        }`}
+        className={`fixed inset-0 z-40 md:hidden transition-all duration-500 ${isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
+          }`}
       >
         <div
-          className="absolute inset-0 bg-door-black/50 backdrop-blur-sm"
+          className="absolute inset-0 bg-door-black/60 backdrop-blur-sm"
           onClick={() => setIsMobileMenuOpen(false)}
         />
         <div
-          className={`absolute top-0 right-0 w-80 h-full bg-white shadow-elevated transform transition-transform duration-500 ease-cinematic ${
-            isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
-          }`}
+          className={`absolute top-0 right-0 w-80 h-full bg-white shadow-2xl transform transition-transform duration-500 ease-cinematic ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+            }`}
         >
-          <div className="p-6 pt-20">
-            <div className="flex flex-col gap-4">
-              <Link
-                to="/"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="text-left text-lg font-medium text-door-dark hover:text-door-black py-3 border-b border-door-border transition-colors duration-300"
-              >
-                Главная
-              </Link>
-              <Link
-                to="/catalog"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="text-left text-lg font-medium text-door-dark hover:text-door-black py-3 border-b border-door-border transition-colors duration-300"
-              >
-                Каталог
-              </Link>
-              <button
-                onClick={() => scrollToSection('#about')}
-                className="text-left text-lg font-medium text-door-dark hover:text-door-black py-3 border-b border-door-border transition-colors duration-300"
-              >
-                О нас
+          <div className="flex flex-col h-full">
+            <div className="p-6 flex justify-between items-center border-b border-gray-100">
+              <span className="font-display font-bold text-xl">Menu</span>
+              <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 hover:bg-gray-100 rounded-full">
+                <X className="w-6 h-6" />
               </button>
-              <button
-                onClick={() => scrollToSection('#contact')}
-                className="text-left text-lg font-medium text-door-dark hover:text-door-black py-3 border-b border-door-border transition-colors duration-300"
-              >
-                Контакты
-              </button>
+            </div>
+
+            <div className="p-6 flex-1 overflow-y-auto">
+              <div className="flex flex-col gap-6">
+                {navLinks.map((link) => (
+                  link.isPage ? (
+                    <Link
+                      key={link.name}
+                      to={link.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="text-xl font-medium text-door-dark hover:text-door-black transition-colors"
+                    >
+                      {link.name}
+                    </Link>
+                  ) : (
+                    <button
+                      key={link.name}
+                      onClick={() => scrollToSection(link.href)}
+                      className="text-left text-xl font-medium text-door-dark hover:text-door-black transition-colors"
+                    >
+                      {link.name}
+                    </button>
+                  )
+                ))}
+              </div>
+            </div>
+
+            <div className="p-6 border-t border-gray-100 bg-gray-50">
+              <div className="flex items-center justify-between text-sm text-gray-500">
+                <span>© 2025 DoorHandles</span>
+              </div>
             </div>
           </div>
         </div>
