@@ -54,7 +54,7 @@ const categories: Category[] = [
       { id: 'hidden_hinges', name: 'Скрытые петли' },
       { id: 'mortise_hinges', name: 'Врезные петли' },
       { id: 'spring_hinges', name: 'Пружинные (барные) петли' },
-      { id: 'overlay_hinges', name: 'Накладные петли (бабочки)' }
+      { id: 'overlay_hinges', name: 'Накладные петли («бабочки»)' }
     ]
   },
   {
@@ -65,7 +65,7 @@ const categories: Category[] = [
     subcategories: [
       { id: 'mortise_locks', name: 'Врезные замки и механизмы' },
       { id: 'smart_locks', name: 'Электронные (умные) замки' },
-      { id: 'cylinders', name: 'Цилиндры для замков' },
+      { id: 'cylinders', name: 'Цилиндры для замков / Сердцевины' },
       { id: 'padlocks', name: 'Навесные замки' }
     ]
   },
@@ -77,7 +77,7 @@ const categories: Category[] = [
     subcategories: [
       { id: 'latches_and_bolts', name: 'Защелки и задвижки' },
       { id: 'wc_and_escutcheons', name: 'Фиксаторы (WC) и накладки' },
-      { id: 'door_stops', name: 'Дверные упоры' },
+      { id: 'door_stops', name: 'Дверные упоры / Ограничители' },
       { id: 'door_closers', name: 'Доводчики' }
     ]
   },
