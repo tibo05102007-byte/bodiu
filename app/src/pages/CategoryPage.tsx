@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import { Grid3X3, LayoutList } from 'lucide-react';
+import { useEffect, useRef, useState, useMemo } from 'react';
+import { Grid3X3, LayoutList, ChevronDown } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import ApolloLogo from '../components/ApolloLogo';
@@ -8,6 +8,8 @@ gsap.registerPlugin(ScrollTrigger);
 
 import { products } from '../data/products';
 import { categories } from '../data/categories';
+
+const ITEMS_PER_PAGE = 12;
 
 const CategoryPage = () => {
   const [activeCategory, setActiveCategory] = useState<string>('door_handles');
@@ -21,8 +23,16 @@ const CategoryPage = () => {
   const [sortBy, setSortBy] = useState<string>('popular');
   const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
 
+  // Pagination State
+  const [visibleCount, setVisibleCount] = useState<number>(ITEMS_PER_PAGE);
+
   const pageRef = useRef<HTMLDivElement>(null);
   const productsRef = useRef<HTMLDivElement>(null);
+
+  // Reset pagination when category or filters change
+  useEffect(() => {
+    setVisibleCount(ITEMS_PER_PAGE);
+  }, [activeCategory, activeSubCategory, selectedBrands, selectedColors, sortBy]);
 
   useEffect(() => {
     setActiveSubCategory(null);
@@ -44,23 +54,30 @@ const CategoryPage = () => {
   const currentCategoryData = categories.find(c => c.id === activeCategory);
 
   // Collect available filters for current category
-  const availableBrands = Array.from(new Set(products.filter(p => p.category === activeCategory).map(p => p.brand)));
-  const availableColors = Array.from(new Set(products.filter(p => p.category === activeCategory).flatMap(p => p.colors)));
+  const availableBrands = useMemo(() => Array.from(new Set(products.filter(p => p.category === activeCategory).map(p => p.brand))), [activeCategory]);
+  const availableColors = useMemo(() => Array.from(new Set(products.filter(p => p.category === activeCategory).flatMap(p => p.colors))), [activeCategory]);
 
-  const filteredProducts = products.filter(p => {
+  const filteredProducts = useMemo(() => products.filter(p => {
     if (p.category !== activeCategory) return false;
     if (activeSubCategory && p.subcategory !== activeSubCategory) return false;
     if (selectedBrands.length > 0 && !selectedBrands.includes(p.brand)) return false;
     if (selectedColors.length > 0 && !p.colors.some(c => selectedColors.includes(c))) return false;
     return true;
-  });
+  }), [activeCategory, activeSubCategory, selectedBrands, selectedColors]);
 
-  const sortedProducts = [...filteredProducts].sort((a, b) => {
+  const sortedProducts = useMemo(() => [...filteredProducts].sort((a, b) => {
     switch (sortBy) {
       case 'newest': return (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0);
-      default: return 0;
+      default: return 0; // Or define a 'popular' sorting logic
     }
-  });
+  }), [filteredProducts, sortBy]);
+
+  const visibleProducts = sortedProducts.slice(0, visibleCount);
+  const hasMore = visibleCount < sortedProducts.length;
+
+  const handleLoadMore = () => {
+    setVisibleCount(prev => prev + ITEMS_PER_PAGE);
+  };
 
   const scrollToProducts = () => {
     productsRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -224,7 +241,7 @@ const CategoryPage = () => {
             </aside>
 
             {/* Products Grid Content */}
-            <div className="flex-1">
+            <div className="flex-1 flex flex-col">
               {/* Controls */}
               <div className="flex justify-between items-center mb-6">
                 <span className="text-door-medium">
@@ -249,47 +266,63 @@ const CategoryPage = () => {
 
               {/* Grid */}
               {sortedProducts.length > 0 ? (
-                <div className={`grid gap-6 ${viewMode === 'grid'
-                  ? 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-3'
-                  : 'grid-cols-1'
-                  }`}>
-                  {sortedProducts.map((product) => (
-                    <div
-                      key={product.id}
-                      className={`group relative bg-door-light rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-lg ${viewMode === 'list' ? 'flex gap-6 items-center' : ''
-                        }`}
-                      onMouseEnter={() => setHoveredProduct(product.id)}
-                      onMouseLeave={() => setHoveredProduct(null)}
-                    >
-                      {/* Image */}
-                      <div className={`relative overflow-hidden bg-white p-6 ${viewMode === 'list' ? 'w-48 h-48 shrink-0' : 'aspect-[4/5]'
-                        }`}>
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          className={`w-full h-full object-contain transition-all duration-700 ${hoveredProduct === product.id ? 'scale-110' : 'scale-100'
-                            }`}
-                        />
+                <>
+                  <div className={`grid gap-6 ${viewMode === 'grid'
+                    ? 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-3'
+                    : 'grid-cols-1'
+                    }`}>
+                    {visibleProducts.map((product) => (
+                      <div
+                        key={product.id}
+                        className={`group relative bg-door-light rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-lg ${viewMode === 'list' ? 'flex gap-6 items-center' : ''
+                          }`}
+                        onMouseEnter={() => setHoveredProduct(product.id)}
+                        onMouseLeave={() => setHoveredProduct(null)}
+                      >
+                        {/* Image - Implemented Lazy Loading */}
+                        <div className={`relative overflow-hidden bg-white p-6 flex items-center justify-center ${viewMode === 'list' ? 'w-48 h-48 shrink-0' : 'aspect-[4/5]'
+                          }`}>
+                          <img
+                            src={product.image}
+                            alt={product.name}
+                            loading="lazy"
+                            className={`max-w-full max-h-full object-contain transition-all duration-700 ${hoveredProduct === product.id ? 'scale-110' : 'scale-100'
+                              }`}
+                          />
 
-                        {/* Badges */}
-                        <div className="absolute top-3 left-3 flex flex-col gap-2">
-                          {product.isNew && <span className="px-2 py-1 bg-door-accent text-white text-[10px] font-bold uppercase rounded">New</span>}
-                          {product.isBestseller && <span className="px-2 py-1 bg-door-black text-white text-[10px] font-bold uppercase rounded">Hit</span>}
+                          {/* Badges */}
+                          <div className="absolute top-3 left-3 flex flex-col gap-2">
+                            {product.isNew && <span className="px-2 py-1 bg-door-accent text-white text-[10px] font-bold uppercase rounded">New</span>}
+                            {product.isBestseller && <span className="px-2 py-1 bg-door-black text-white text-[10px] font-bold uppercase rounded">Hit</span>}
+                          </div>
+                        </div>
+
+                        {/* Info */}
+                        <div className="p-5 flex-1">
+                          <div className="text-xs text-door-medium uppercase tracking-wider mb-1 line-clamp-1">
+                            {categories.find(c => c.id === product.category)?.name}
+                            {product.subcategory && ` / ${categories.find(c => c.id === product.category)?.subcategories?.find(s => s.id === product.subcategory)?.name}`}
+                          </div>
+                          <h3 className="font-display font-bold text-lg text-door-black mb-2 line-clamp-2">{product.name}</h3>
+                          {product.description && viewMode === 'list' && <p className="text-sm text-gray-500 mb-4 line-clamp-2">{product.description}</p>}
                         </div>
                       </div>
+                    ))}
+                  </div>
 
-                      {/* Info */}
-                      <div className="p-5 flex-1">
-                        <div className="text-xs text-door-medium uppercase tracking-wider mb-1">
-                          {categories.find(c => c.id === product.category)?.name}
-                          {product.subcategory && ` / ${categories.find(c => c.id === product.category)?.subcategories?.find(s => s.id === product.subcategory)?.name}`}
-                        </div>
-                        <h3 className="font-display font-bold text-lg text-door-black mb-2">{product.name}</h3>
-                        {product.description && viewMode === 'list' && <p className="text-sm text-gray-500 mb-4">{product.description}</p>}
-                      </div>
+                  {/* Load More Button */}
+                  {hasMore && (
+                    <div className="mt-12 flex justify-center">
+                      <button
+                        onClick={handleLoadMore}
+                        className="flex items-center gap-2 px-8 py-3 bg-door-light text-door-black hover:bg-gray-200 transition-colors rounded-full font-medium"
+                      >
+                        Показать еще
+                        <ChevronDown className="w-4 h-4" />
+                      </button>
                     </div>
-                  ))}
-                </div>
+                  )}
+                </>
               ) : (
                 <div className="py-20 text-center">
                   <p className="text-xl text-gray-400">В этой категории пока нет товаров</p>
@@ -305,7 +338,7 @@ const CategoryPage = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-door-black text-white py-12 border-t border-white/10">
+      <footer className="bg-door-black text-white py-12 border-t border-white/10 mt-auto">
         <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 text-center md:text-left">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center gap-2 mb-4 md:mb-0">
