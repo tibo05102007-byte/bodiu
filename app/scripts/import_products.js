@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const SRC_DIR = 'c:/Users/User/Documents/Adobe/bodiu/products_image';
+const SRC_DIR = 'c:/Users/User/Documents/Adobe/bodiu/app/dist/images/products';
 const DEST_DIR = path.join(__dirname, '../public/images/products/auto');
 
 if (!fs.existsSync(DEST_DIR)) {
@@ -71,37 +71,42 @@ function processDirectory(dirPath, parentStr = '') {
     const imageFiles = items.filter(i => !i.isDirectory() && (i.name.toLowerCase().endsWith('.jpg') || i.name.toLowerCase().endsWith('.jpeg') || i.name.toLowerCase().endsWith('.png')));
 
     if (imageFiles.length > 0 && parentStr) {
-        // Pick the first image as representative for this "model" folder
-        const img = imageFiles[0];
-        const modelName = parentStr.split('/').pop() || 'Item';
-
-        // Determine base category mapping
         const rootFolder = parentStr.split('/')[0];
         const mapping = CAT_MAP[rootFolder];
-        if (!mapping) return; // Ignore folders not in our mapping (e.g., ОБЬЯСНЕНИЕ)
 
-        const { brand, colors } = determineBrandAndColor(modelName, parentStr);
+        if (mapping) {
+            let variation = 1;
+            for (const img of imageFiles) {
+                const modelName = parentStr.split('/').pop() || 'Item';
+                const { brand, colors } = determineBrandAndColor(modelName, parentStr);
 
-        const fileNameStr = `${productId}_${img.name.replace(/\\s/g, '_')}`;
-        const destPath = path.join(DEST_DIR, fileNameStr);
+                const fileNameStr = `${productId}_${img.name.replace(/\\s/g, '_')}`;
+                const destPath = path.join(DEST_DIR, fileNameStr);
 
-        try {
-            fs.copyFileSync(path.join(dirPath, img.name), destPath);
+                try {
+                    fs.copyFileSync(path.join(dirPath, img.name), destPath);
 
-            products.push({
-                id: productId++,
-                name: `${mapping.cat === 'door_handles' ? 'Ручка ' : ''}${modelName.replace(/apollo|status|neon|статус/i, '').trim() || brand + ' Model'}`,
-                category: mapping.cat,
-                subcategory: mapping.sub,
-                brand: brand,
-                image: `/images/products/auto/${fileNameStr}`,
-                colors: colors,
-                inStock: true
-            });
-        } catch (e) {
-            console.error("Error copy", e);
+                    let finalName = `${mapping.cat === 'door_handles' ? 'Ручка ' : ''}${modelName.replace(/apollo|status|neon|статус/i, '').trim() || brand + ' Model'}`;
+                    if (imageFiles.length > 1) {
+                        finalName += ` (Фото ${variation})`;
+                    }
+
+                    products.push({
+                        id: productId++,
+                        name: finalName,
+                        category: mapping.cat,
+                        subcategory: mapping.sub,
+                        brand: brand,
+                        image: `/images/products/auto/${fileNameStr}`,
+                        colors: colors,
+                        inStock: true
+                    });
+                    variation++;
+                } catch (e) {
+                    console.error("Error copy", e);
+                }
+            }
         }
-        return; // Stop deepening if we found an image for this leaf folder
     }
 
     // Traverse subdirectories
