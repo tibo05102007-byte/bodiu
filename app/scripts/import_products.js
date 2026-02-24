@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const SRC_DIR = 'c:\\Users\\User\\Documents\\Adobe\\bodiu\\products_image';
+const SRC_DIR = 'c:/Users/User/Documents/Adobe/bodiu/products_image';
 const DEST_DIR = path.join(__dirname, '../public/images/products/auto');
 
 if (!fs.existsSync(DEST_DIR)) {
