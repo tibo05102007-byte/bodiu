@@ -9,7 +9,7 @@ if (!fs.existsSync(DEST_DIR)) {
 }
 
 // category map
-const CAT_MAP: Record<string, { cat: string, sub: string }> = {
+const CAT_MAP = {
     'РУЧКИ': { cat: 'door_handles', sub: 'rosette_handles' },
     'Ручки скобы': { cat: 'door_handles', sub: 'pull_handles' },
     'СКОБЫ ДЛЯ ДВЕРНЫХ РУЧЕК': { cat: 'door_handles', sub: 'pull_handles' },
@@ -38,9 +38,9 @@ const CAT_MAP: Record<string, { cat: string, sub: string }> = {
 const BRAND_KEYWORDS = ['APOLLO', 'STATUS', 'NEON', 'СТАТУС'];
 
 let productId = 2000;
-const products: any[] = [];
+const products = [];
 
-function determineBrandAndColor(folderName: string, parentFolderName: string) {
+function determineBrandAndColor(folderName, parentFolderName) {
     let brand = 'Unknown';
     let colors = ['Хром']; // Default
     const upperName = (folderName + ' ' + parentFolderName).toUpperCase();
