@@ -9,8 +9,6 @@ gsap.registerPlugin(ScrollTrigger);
 interface Product {
   id: number;
   name: string;
-  price: number;
-  oldPrice?: number;
   image: string;
   category: string;
   subcategory?: string;
@@ -94,39 +92,39 @@ const categories: Category[] = [
 const products: Product[] = [
   // --- 1. ДВЕРНЫЕ РУЧКИ ---
   // Ручки на розетке
-  { id: 101, name: 'Axe Aluminum Black', category: 'door_handles', subcategory: 'rosette_handles', brand: 'Apollo', price: 7450, image: '/images/products/handle-aluminum-axe.jpg', colors: ['Черный'], inStock: true },
-  { id: 102, name: 'Blade Aluminum Satin', category: 'door_handles', subcategory: 'rosette_handles', brand: 'Apollo', price: 7950, image: '/images/products/handle-aluminum-blade.jpg', colors: ['Хром', 'Серебро'], inStock: true, isBestseller: true },
-  { id: 103, name: 'Alfa Zinc Black', category: 'door_handles', subcategory: 'rosette_handles', brand: 'Status', price: 9450, image: '/images/products/alfa-black.jpg', colors: ['Черный'], inStock: true, isNew: true },
-  { id: 104, name: 'Classic Zinc Antique', category: 'door_handles', subcategory: 'rosette_handles', brand: 'Status', price: 13950, image: '/images/products/classic-ab.jpg', colors: ['Бронза'], inStock: true },
-  { id: 105, name: 'Cube Zinc White', category: 'door_handles', subcategory: 'rosette_handles', brand: 'Neon', price: 9950, image: '/images/products/cube-white.jpg', colors: ['Белый'], inStock: true },
-  { id: 106, name: 'Elita Zinc Bronze', category: 'door_handles', subcategory: 'rosette_handles', brand: 'Neon', price: 17450, image: '/images/products/elita-br.jpg', colors: ['Бронза'], inStock: true },
-  { id: 107, name: 'Fina Zinc Gold', category: 'door_handles', subcategory: 'rosette_handles', brand: 'Apollo', price: 15950, image: '/images/products/fina-ab.jpg', colors: ['Золото'], inStock: true },
-  { id: 108, name: 'Modena Zinc Black', category: 'door_handles', subcategory: 'rosette_handles', brand: 'Status', price: 11450, image: '/images/products/modena-black.jpg', colors: ['Черный'], inStock: true },
+  { id: 101, name: 'Apollo Black Series', category: 'door_handles', subcategory: 'rosette_handles', brand: 'Apollo', image: '/images/products/real/apollo_black.jpg', colors: ['Черный'], inStock: true },
+  { id: 102, name: 'Blade Aluminum Satin', category: 'door_handles', subcategory: 'rosette_handles', brand: 'Apollo', image: '/images/products/handle-aluminum-blade.jpg', colors: ['Хром', 'Серебро'], inStock: true, isBestseller: true },
+  { id: 103, name: 'Alfa Zinc Black', category: 'door_handles', subcategory: 'rosette_handles', brand: 'Status', image: '/images/products/alfa-black.jpg', colors: ['Черный'], inStock: true, isNew: true },
+  { id: 104, name: 'Status Gold Prestige', category: 'door_handles', subcategory: 'rosette_handles', brand: 'Status', image: '/images/products/real/status_gold.jpg', colors: ['Золото'], inStock: true },
+  { id: 105, name: 'Cube Zinc White', category: 'door_handles', subcategory: 'rosette_handles', brand: 'Neon', image: '/images/products/cube-white.jpg', colors: ['Белый'], inStock: true },
+  { id: 106, name: 'Elita Zinc Bronze', category: 'door_handles', subcategory: 'rosette_handles', brand: 'Neon', image: '/images/products/elita-br.jpg', colors: ['Бронза'], inStock: true },
+  { id: 107, name: 'Fina Zinc Gold', category: 'door_handles', subcategory: 'rosette_handles', brand: 'Apollo', image: '/images/products/fina-ab.jpg', colors: ['Золото'], inStock: true },
+  { id: 108, name: 'Modena Zinc Black', category: 'door_handles', subcategory: 'rosette_handles', brand: 'Status', image: '/images/products/modena-black.jpg', colors: ['Черный'], inStock: true },
   // Ручки-скобы
-  { id: 110, name: 'Ручка-скоба офисная 300мм', category: 'door_handles', subcategory: 'pull_handles', brand: 'Apollo', price: 8500, image: '/images/products/handle-aluminum-axe.jpg', colors: ['Хром'], inStock: true },
+  { id: 110, name: 'Ручка-скоба офисная 300мм', category: 'door_handles', subcategory: 'pull_handles', brand: 'Apollo', image: '/images/products/handle-aluminum-axe.jpg', colors: ['Хром'], inStock: true },
 
   // --- 2. ДВЕРНЫЕ ПЕТЛИ ---
-  { id: 501, name: 'Петля бабочка 100мм', category: 'door_hinges', subcategory: 'overlay_hinges', brand: 'Status', price: 600, image: '/images/products/hinge-overlay.jpg', colors: ['Хром', 'Серебро'], inStock: true },
-  { id: 502, name: 'Петля врезная подшипник', category: 'door_hinges', subcategory: 'mortise_hinges', brand: 'Apollo', price: 900, image: '/images/products/hinge-overlay.jpg', colors: ['Золото'], inStock: true },
-  { id: 503, name: 'Скрытая петля 3D', category: 'door_hinges', subcategory: 'hidden_hinges', brand: 'Neon', price: 4500, image: '/images/products/hinge-overlay.jpg', colors: ['Черный', 'Серебро'], inStock: true },
+  { id: 501, name: 'Петля бабочка 100мм', category: 'door_hinges', subcategory: 'overlay_hinges', brand: 'Status', image: '/images/products/hinge-overlay.jpg', colors: ['Хром', 'Серебро'], inStock: true },
+  { id: 502, name: 'Врезная петля Apollo Premium', category: 'door_hinges', subcategory: 'mortise_hinges', brand: 'Apollo', image: '/images/products/real/hinge_mortise.jpg', colors: ['Сталь', 'Хром'], inStock: true },
+  { id: 503, name: 'Скрытая петля 3D', category: 'door_hinges', subcategory: 'hidden_hinges', brand: 'Neon', image: '/images/products/hinge-overlay.jpg', colors: ['Черный', 'Серебро'], inStock: true },
 
   // --- 3. ЗАМКИ И БЕЗОПАСНОСТЬ ---
-  { id: 201, name: 'Магнитный замок Silent M', category: 'locks_and_security', subcategory: 'mortise_locks', brand: 'Apollo', price: 2750, image: '/images/products/mechanism-magnetic.jpg', colors: ['Черный', 'Серебро'], inStock: true, description: 'Бесшумный магнитный язычок.' },
-  { id: 202, name: 'Механизм металлический 100', category: 'locks_and_security', subcategory: 'mortise_locks', brand: 'Status', price: 1750, image: '/images/products/mechanism-metal.png', colors: ['Серебро'], inStock: true },
-  { id: 801, name: 'Замок на планке Classic', category: 'locks_and_security', subcategory: 'mortise_locks', brand: 'Neon', price: 4500, image: '/images/products/mechanism-magnetic.jpg', colors: ['Золото'], inStock: true },
-  { id: 301, name: 'Цилиндр 60мм Никель', category: 'locks_and_security', subcategory: 'cylinders', brand: 'Apollo', price: 2000, image: '/images/products/cylinder.png', colors: ['Серебро'], inStock: true },
-  { id: 302, name: 'Цилиндр 70мм Ключ/Вертушка', category: 'locks_and_security', subcategory: 'cylinders', brand: 'Status', price: 2750, image: '/images/products/cylinder.png', colors: ['Золото'], inStock: true },
-  { id: 1201, name: 'Замок навесной Apollo Black', category: 'locks_and_security', subcategory: 'padlocks', brand: 'Apollo', price: 3500, image: '/images/products/padlock.jpg', colors: ['Черный'], inStock: true, isNew: true },
+  { id: 201, name: 'Врезной замок Status Secure', category: 'locks_and_security', subcategory: 'mortise_locks', brand: 'Status', image: '/images/products/real/lock_mortise.jpg', colors: ['Сталь'], inStock: true, description: 'Высочайшая надежность и долговечность.' },
+  { id: 202, name: 'Магнитный замок Silent M', category: 'locks_and_security', subcategory: 'mortise_locks', brand: 'Apollo', image: '/images/products/mechanism-magnetic.jpg', colors: ['Черный', 'Серебро'], inStock: true, description: 'Бесшумный магнитный язычок.' },
+  { id: 801, name: 'Замок на планке Classic', category: 'locks_and_security', subcategory: 'mortise_locks', brand: 'Neon', image: '/images/products/mechanism-magnetic.jpg', colors: ['Золото'], inStock: true },
+  { id: 301, name: 'Цилиндр 60мм Никель', category: 'locks_and_security', subcategory: 'cylinders', brand: 'Apollo', image: '/images/products/cylinder.png', colors: ['Серебро'], inStock: true },
+  { id: 302, name: 'Цилиндр 70мм Ключ/Вертушка', category: 'locks_and_security', subcategory: 'cylinders', brand: 'Status', image: '/images/products/cylinder.png', colors: ['Золото'], inStock: true },
+  { id: 1201, name: 'Замок навесной Apollo Black', category: 'locks_and_security', subcategory: 'padlocks', brand: 'Apollo', image: '/images/products/padlock.jpg', colors: ['Черный'], inStock: true, isNew: true },
 
   // --- 4. ДВЕРНАЯ ФУРНИТУРА ---
-  { id: 401, name: 'Защелка 45мм', category: 'door_fittings', subcategory: 'latches_and_bolts', brand: 'Apollo', price: 750, image: '/images/products/latch.jpg', colors: ['Серебро'], inStock: true },
-  { id: 451, name: 'Задвижка ригель', category: 'door_fittings', subcategory: 'latches_and_bolts', brand: 'Status', price: 1250, image: '/images/products/deadbolt.jpg', colors: ['Бронза'], inStock: true },
-  { id: 701, name: 'WC фиксатор Квадрат', category: 'door_fittings', subcategory: 'wc_and_escutcheons', brand: 'Neon', price: 2250, image: '/images/products/wc-kit.jpg', colors: ['Черный'], inStock: true },
-  { id: 601, name: 'Накладка цилиндровая', category: 'door_fittings', subcategory: 'wc_and_escutcheons', brand: 'Apollo', price: 1000, image: '/images/products/escutcheon.jpg', colors: ['Серебро'], inStock: true },
-  { id: 901, name: 'Упор дверной напольный', category: 'door_fittings', subcategory: 'door_stops', brand: 'Status', price: 600, image: '/images/products/door-stop.jpg', colors: ['Серебро'], inStock: true },
+  { id: 401, name: 'Защелка 45мм', category: 'door_fittings', subcategory: 'latches_and_bolts', brand: 'Apollo', image: '/images/products/latch.jpg', colors: ['Серебро'], inStock: true },
+  { id: 451, name: 'Задвижка ригель', category: 'door_fittings', subcategory: 'latches_and_bolts', brand: 'Status', image: '/images/products/deadbolt.jpg', colors: ['Бронза'], inStock: true },
+  { id: 701, name: 'WC фиксатор Квадрат', category: 'door_fittings', subcategory: 'wc_and_escutcheons', brand: 'Neon', image: '/images/products/wc-kit.jpg', colors: ['Черный'], inStock: true },
+  { id: 601, name: 'Накладка цилиндровая', category: 'door_fittings', subcategory: 'wc_and_escutcheons', brand: 'Apollo', image: '/images/products/escutcheon.jpg', colors: ['Серебро'], inStock: true },
+  { id: 901, name: 'Упор дверной напольный', category: 'door_fittings', subcategory: 'door_stops', brand: 'Status', image: '/images/products/door-stop.jpg', colors: ['Серебро'], inStock: true },
 
   // --- 5. РАЗДВИЖНЫЕ СИСТЕМЫ ---
-  { id: 1001, name: 'Комплект раздвижной', category: 'sliding_systems', brand: 'Neon', price: 15450, image: '/images/products/terra-sn.jpg', colors: ['Серебро'], inStock: true },
+  { id: 1001, name: 'Комплект раздвижной', category: 'sliding_systems', brand: 'Neon', image: '/images/products/terra-sn.jpg', colors: ['Серебро'], inStock: true },
 ];
 
 const CategoryPage = () => {
@@ -177,8 +175,6 @@ const CategoryPage = () => {
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     switch (sortBy) {
-      case 'price-asc': return a.price - b.price;
-      case 'price-desc': return b.price - a.price;
       case 'newest': return (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0);
       default: return 0;
     }
@@ -365,8 +361,6 @@ const CategoryPage = () => {
                   >
                     <option value="popular">Популярные</option>
                     <option value="newest">Новинки</option>
-                    <option value="price-asc">Сначала дешевые</option>
-                    <option value="price-desc">Сначала дороги</option>
                   </select>
                 </div>
               </div>
@@ -410,11 +404,6 @@ const CategoryPage = () => {
                         </div>
                         <h3 className="font-display font-bold text-lg text-door-black mb-2">{product.name}</h3>
                         {product.description && viewMode === 'list' && <p className="text-sm text-gray-500 mb-4">{product.description}</p>}
-
-                        <div className="flex items-center justify-between mt-4">
-                          <span className="text-lg font-bold">{product.price} ₸</span>
-
-                        </div>
                       </div>
                     </div>
                   ))}
