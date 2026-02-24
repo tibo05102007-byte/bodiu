@@ -21,7 +21,7 @@ export const products: Product[] = [
         "category": "door_fittings",
         "subcategory": "wc_and_escutcheons",
         "brand": "Apollo",
-        "image": "/images/products/auto/2000_IMG_2819.JPG",
+        "image": "/images/products/auto/apollo-wc-cyl-hrom-2000.jpg",
         "colors": [
             "Хром"
         ],
@@ -33,7 +33,7 @@ export const products: Product[] = [
         "category": "door_hinges",
         "subcategory": "mortise_hinges",
         "brand": "Apollo",
-        "image": "/images/products/auto/2001_IMG_5139.JPG",
+        "image": "/images/products/auto/apollo-vreznye-petli-hrom-2001.jpg",
         "colors": [
             "Хром"
         ],
@@ -45,7 +45,7 @@ export const products: Product[] = [
         "category": "locks_and_security",
         "subcategory": "mortise_locks",
         "brand": "Status",
-        "image": "/images/products/auto/2002_IMG_1361 — копия.JPG",
+        "image": "/images/products/auto/status-zamki-hrom-2002.jpg",
         "colors": [
             "Хром"
         ],
@@ -57,7 +57,7 @@ export const products: Product[] = [
         "category": "locks_and_security",
         "subcategory": "mortise_locks",
         "brand": "Apollo",
-        "image": "/images/products/auto/2003_IMG_7840.JPG",
+        "image": "/images/products/auto/apollo-magnitnye-mezhkomnatnye-zamki-hrom-2003.jpg",
         "colors": [
             "Хром"
         ],
@@ -69,7 +69,7 @@ export const products: Product[] = [
         "category": "locks_and_security",
         "subcategory": "mortise_locks",
         "brand": "Apollo",
-        "image": "/images/products/auto/2004_IMG_6540.JPG",
+        "image": "/images/products/auto/apollo-apolinho-hrom-2004.jpg",
         "colors": [
             "Хром"
         ],
@@ -81,7 +81,7 @@ export const products: Product[] = [
         "category": "locks_and_security",
         "subcategory": "mortise_locks",
         "brand": "Apollo",
-        "image": "/images/products/auto/2005_IMG_0070.JPG",
+        "image": "/images/products/auto/apollo-cx-hrom-2005.jpg",
         "colors": [
             "Хром"
         ],
@@ -93,7 +93,7 @@ export const products: Product[] = [
         "category": "locks_and_security",
         "subcategory": "mortise_locks",
         "brand": "Apollo",
-        "image": "/images/products/auto/2006_IMG_0311.JPG",
+        "image": "/images/products/auto/apollo-mg-hrom-2006.jpg",
         "colors": [
             "Хром"
         ],
@@ -105,7 +105,7 @@ export const products: Product[] = [
         "category": "locks_and_security",
         "subcategory": "mortise_locks",
         "brand": "Apollo",
-        "image": "/images/products/auto/2007_IMG_0072.JPG",
+        "image": "/images/products/auto/apollo-mehanicheskij-hrom-2007.jpg",
         "colors": [
             "Хром"
         ],
@@ -117,7 +117,7 @@ export const products: Product[] = [
         "category": "door_hinges",
         "subcategory": "overlay_hinges",
         "brand": "Apollo",
-        "image": "/images/products/auto/2008_IMG_0908.JPG",
+        "image": "/images/products/auto/apollo-navesy-babochki-apollot-hrom-2008.jpg",
         "colors": [
             "Хром"
         ],
@@ -129,7 +129,7 @@ export const products: Product[] = [
         "category": "door_hinges",
         "subcategory": "overlay_hinges",
         "brand": "Status",
-        "image": "/images/products/auto/2009_IMG_0366.JPG",
+        "image": "/images/products/auto/status-navesy-hrom-2009.jpg",
         "colors": [
             "Хром"
         ],
@@ -141,7 +141,7 @@ export const products: Product[] = [
         "category": "door_fittings",
         "subcategory": "door_closers",
         "brand": "Apollo",
-        "image": "/images/products/auto/2010_IMG_0373.JPG",
+        "image": "/images/products/auto/apollo-dovodchiki-dvernye-hrom-2010.jpg",
         "colors": [
             "Хром"
         ],
@@ -153,7 +153,7 @@ export const products: Product[] = [
         "category": "door_fittings",
         "subcategory": "latches_and_bolts",
         "brand": "Apollo",
-        "image": "/images/products/auto/2011_IMG_4348.JPG",
+        "image": "/images/products/auto/apollo-zadvizhka-hrom-2011.jpg",
         "colors": [
             "Хром"
         ],
@@ -165,7 +165,7 @@ export const products: Product[] = [
         "category": "door_fittings",
         "subcategory": "latches_and_bolts",
         "brand": "Status",
-        "image": "/images/products/auto/2012_D-45 MSN.JPG",
+        "image": "/images/products/auto/status-zadvizhka-hrom-2012.jpg",
         "colors": [
             "Хром"
         ],
@@ -177,7 +177,7 @@ export const products: Product[] = [
         "category": "locks_and_security",
         "subcategory": "mortise_locks",
         "brand": "Apollo",
-        "image": "/images/products/auto/2013_IMG_4237.JPG",
+        "image": "/images/products/auto/apollo-zamki-hrom-2013.jpg",
         "colors": [
             "Хром"
         ],
@@ -189,7 +189,7 @@ export const products: Product[] = [
         "category": "door_fittings",
         "subcategory": "latches_and_bolts",
         "brand": "Apollo",
-        "image": "/images/products/auto/2014_IMG_4350.JPG",
+        "image": "/images/products/auto/apollo-cy-03s-hrom-2014.jpg",
         "colors": [
             "Хром"
         ],
@@ -213,7 +213,7 @@ export const products: Product[] = [
         "category": "door_fittings",
         "subcategory": "latches_and_bolts",
         "brand": "Apollo",
-        "image": "/images/products/auto/2016_IMG_1372.JPG",
+        "image": "/images/products/auto/apollo-magnitnye-zashchelki-hrom-2016.jpg",
         "colors": [
             "Хром"
         ],
@@ -225,7 +225,7 @@ export const products: Product[] = [
         "category": "door_fittings",
         "subcategory": "wc_and_escutcheons",
         "brand": "Apollo",
-        "image": "/images/products/auto/2017_2025-07-14 17-50-35 (1).JPEG",
+        "image": "/images/products/auto/apollo-nakladki-hrom-2017.jpeg",
         "colors": [
             "Хром"
         ],
@@ -237,7 +237,7 @@ export const products: Product[] = [
         "category": "door_hinges",
         "subcategory": "spring_hinges",
         "brand": "Apollo",
-        "image": "/images/products/auto/2018_IMG_4853.JPG",
+        "image": "/images/products/auto/apollo-pruzhinnaya-petlya-hrom-2018.jpg",
         "colors": [
             "Хром"
         ],
@@ -249,7 +249,7 @@ export const products: Product[] = [
         "category": "sliding_systems",
         "subcategory": "",
         "brand": "Apollo",
-        "image": "/images/products/auto/2019_IMG_7004.JPG",
+        "image": "/images/products/auto/apollo-dlya-razdvizhnyh-dverej-hrom-2019.jpg",
         "colors": [
             "Хром"
         ],
@@ -261,7 +261,7 @@ export const products: Product[] = [
         "category": "door_handles",
         "subcategory": "rosette_handles",
         "brand": "Neon",
-        "image": "/images/products/auto/2020_2025-07-14 18-17-27 (1).JPEG",
+        "image": "/images/products/auto/neon-ruchka-neon-model-hrom-2020.jpeg",
         "colors": [
             "Хром"
         ],
@@ -273,7 +273,7 @@ export const products: Product[] = [
         "category": "door_handles",
         "subcategory": "rosette_handles",
         "brand": "Apollo",
-        "image": "/images/products/auto/2021_IMG_1752.PNG",
+        "image": "/images/products/auto/apollo-ruchka-azhur-hrom-2021.png",
         "colors": [
             "Хром"
         ],
@@ -285,7 +285,7 @@ export const products: Product[] = [
         "category": "door_handles",
         "subcategory": "rosette_handles",
         "brand": "Apollo",
-        "image": "/images/products/auto/2022_IMG_0906.JPG",
+        "image": "/images/products/auto/apollo-ruchka-belye-belyj-2022.jpg",
         "colors": [
             "Белый"
         ],
@@ -297,7 +297,7 @@ export const products: Product[] = [
         "category": "door_handles",
         "subcategory": "rosette_handles",
         "brand": "Apollo",
-        "image": "/images/products/auto/2023_IMG_1239.JPG",
+        "image": "/images/products/auto/apollo-ruchka-bronza-bronza-2023.jpg",
         "colors": [
             "Бронза"
         ],
@@ -309,7 +309,7 @@ export const products: Product[] = [
         "category": "door_handles",
         "subcategory": "rosette_handles",
         "brand": "Status",
-        "image": "/images/products/auto/2024_IMG_1668.JPG",
+        "image": "/images/products/auto/status-ruchka-grafit-grafit-2024.jpg",
         "colors": [
             "Графит"
         ],
@@ -321,7 +321,7 @@ export const products: Product[] = [
         "category": "door_handles",
         "subcategory": "rosette_handles",
         "brand": "Apollo",
-        "image": "/images/products/auto/2025_IMG_0204.JPG",
+        "image": "/images/products/auto/apollo-ruchka-zoloto-zoloto-2025.jpg",
         "colors": [
             "Золото"
         ],
@@ -333,7 +333,7 @@ export const products: Product[] = [
         "category": "door_handles",
         "subcategory": "rosette_handles",
         "brand": "Status",
-        "image": "/images/products/auto/2026_IMG_0351.JPG",
+        "image": "/images/products/auto/status-ruchka-zoloto-zoloto-2026.jpg",
         "colors": [
             "Золото"
         ],
@@ -345,7 +345,7 @@ export const products: Product[] = [
         "category": "door_handles",
         "subcategory": "rosette_handles",
         "brand": "Apollo",
-        "image": "/images/products/auto/2027_IMG_3752.JPG",
+        "image": "/images/products/auto/apollo-ruchka-matovyj-hrom-hrom-2027.jpg",
         "colors": [
             "Хром"
         ],
@@ -357,7 +357,7 @@ export const products: Product[] = [
         "category": "door_handles",
         "subcategory": "rosette_handles",
         "brand": "Apollo",
-        "image": "/images/products/auto/2028_IMG_0202.JPG",
+        "image": "/images/products/auto/apollo-ruchka-matovyj-chernyj-nikel-chernyj-2028.jpg",
         "colors": [
             "Черный"
         ],
@@ -369,7 +369,7 @@ export const products: Product[] = [
         "category": "door_handles",
         "subcategory": "rosette_handles",
         "brand": "Apollo",
-        "image": "/images/products/auto/2029_IMG_0203.JPG",
+        "image": "/images/products/auto/apollo-ruchka-serebro-hrom-2029.jpg",
         "colors": [
             "Хром"
         ],
@@ -381,7 +381,7 @@ export const products: Product[] = [
         "category": "door_handles",
         "subcategory": "rosette_handles",
         "brand": "Status",
-        "image": "/images/products/auto/2030_IMG_0360.JPG",
+        "image": "/images/products/auto/status-ruchka-serebro-hrom-2030.jpg",
         "colors": [
             "Хром"
         ],
@@ -393,7 +393,7 @@ export const products: Product[] = [
         "category": "door_handles",
         "subcategory": "rosette_handles",
         "brand": "Status",
-        "image": "/images/products/auto/2031_Alba Mbn.JPG",
+        "image": "/images/products/auto/status-ruchka-1-hrom-2031.jpg",
         "colors": [
             "Хром"
         ],
@@ -405,7 +405,7 @@ export const products: Product[] = [
         "category": "door_handles",
         "subcategory": "rosette_handles",
         "brand": "Apollo",
-        "image": "/images/products/auto/2032_IMG_0205.JPG",
+        "image": "/images/products/auto/apollo-ruchka-frantsuzskoe-zoloto-zoloto-2032.jpg",
         "colors": [
             "Золото"
         ],
@@ -417,7 +417,7 @@ export const products: Product[] = [
         "category": "door_handles",
         "subcategory": "rosette_handles",
         "brand": "Apollo",
-        "image": "/images/products/auto/2033_IMG_1661.JPG",
+        "image": "/images/products/auto/apollo-ruchka-hrom-hrom-2033.jpg",
         "colors": [
             "Хром"
         ],
@@ -429,7 +429,7 @@ export const products: Product[] = [
         "category": "door_handles",
         "subcategory": "rosette_handles",
         "brand": "Apollo",
-        "image": "/images/products/auto/2034_IMG_0210.JPG",
+        "image": "/images/products/auto/apollo-ruchka-chernye-chernyj-2034.jpg",
         "colors": [
             "Черный"
         ],
@@ -441,7 +441,7 @@ export const products: Product[] = [
         "category": "door_handles",
         "subcategory": "rosette_handles",
         "brand": "Status",
-        "image": "/images/products/auto/2035_IMG_0313.JPG",
+        "image": "/images/products/auto/status-ruchka-chernye-chernyj-2035.jpg",
         "colors": [
             "Черный"
         ],
@@ -453,7 +453,7 @@ export const products: Product[] = [
         "category": "door_handles",
         "subcategory": "pull_handles",
         "brand": "Apollo",
-        "image": "/images/products/auto/2036_H-075 FG.JPG",
+        "image": "/images/products/auto/apollo-ruchka-ruchki-skoby-hrom-2036.jpg",
         "colors": [
             "Хром"
         ],
@@ -465,7 +465,7 @@ export const products: Product[] = [
         "category": "locks_and_security",
         "subcategory": "cylinders",
         "brand": "Apollo",
-        "image": "/images/products/auto/2037_IMG_4883.JPG",
+        "image": "/images/products/auto/apollo-serdetseviny-hrom-2037.jpg",
         "colors": [
             "Хром"
         ],
@@ -489,7 +489,7 @@ export const products: Product[] = [
         "category": "door_hinges",
         "subcategory": "hidden_hinges",
         "brand": "Apollo",
-        "image": "/images/products/auto/2039_IMG_0068.JPG",
+        "image": "/images/products/auto/apollo-diamond-hrom-2039.jpg",
         "colors": [
             "Хром"
         ],
@@ -501,7 +501,7 @@ export const products: Product[] = [
         "category": "door_hinges",
         "subcategory": "hidden_hinges",
         "brand": "Apollo",
-        "image": "/images/products/auto/2040_IMG_7706.JPG",
+        "image": "/images/products/auto/apollo-sekret-petli-hrom-2040.jpg",
         "colors": [
             "Хром"
         ],
@@ -513,7 +513,7 @@ export const products: Product[] = [
         "category": "door_fittings",
         "subcategory": "door_stops",
         "brand": "Apollo",
-        "image": "/images/products/auto/2041_IMG_2762.JPG",
+        "image": "/images/products/auto/apollo-stiralka-hrom-2041.jpg",
         "colors": [
             "Хром"
         ],
@@ -525,7 +525,7 @@ export const products: Product[] = [
         "category": "door_fittings",
         "subcategory": "door_stops",
         "brand": "Apollo",
-        "image": "/images/products/auto/2042_IMG_2014.JPG",
+        "image": "/images/products/auto/apollo-stopper-hrom-2042.jpg",
         "colors": [
             "Хром"
         ],
@@ -537,7 +537,7 @@ export const products: Product[] = [
         "category": "door_fittings",
         "subcategory": "door_stops",
         "brand": "Apollo",
-        "image": "/images/products/auto/2043_DOOR STOP BLACK.JPG",
+        "image": "/images/products/auto/apollo-stoppery-apollo-hrom-2043.jpg",
         "colors": [
             "Хром"
         ],
@@ -549,7 +549,7 @@ export const products: Product[] = [
         "category": "door_fittings",
         "subcategory": "door_stops",
         "brand": "Apollo",
-        "image": "/images/products/auto/2044_IMG_1367.JPG",
+        "image": "/images/products/auto/apollo-shpingalet-hrom-2044.jpg",
         "colors": [
             "Хром"
         ],
@@ -561,7 +561,7 @@ export const products: Product[] = [
         "category": "door_fittings",
         "subcategory": "wc_and_escutcheons",
         "brand": "Apollo",
-        "image": "/images/products/auto/2045_IMG_3592.JPG",
+        "image": "/images/products/auto/apollo-rolikovyj-fiksator-hrom-2045.jpg",
         "colors": [
             "Хром"
         ],
@@ -573,7 +573,7 @@ export const products: Product[] = [
         "category": "door_fittings",
         "subcategory": "wc_and_escutcheons",
         "brand": "Apollo",
-        "image": "/images/products/auto/2046_IMG_1374.JPG",
+        "image": "/images/products/auto/apollo-sharikovyj-fiksator-hrom-2046.jpg",
         "colors": [
             "Хром"
         ],
@@ -585,7 +585,7 @@ export const products: Product[] = [
         "category": "locks_and_security",
         "subcategory": "smart_locks",
         "brand": "Apollo",
-        "image": "/images/products/auto/2047_IMG_4253.JPG",
+        "image": "/images/products/auto/apollo-elektronnye-dvernye-zamki-hrom-2047.jpg",
         "colors": [
             "Хром"
         ],
