@@ -1,18 +1,18 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ShoppingBag } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import ApolloLogo from '../components/ApolloLogo';
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [cartCount] = useState(2);
   const navRef = useRef<HTMLElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const location = useLocation();
-  const isHomePage = location.pathname === '/';
+
+
 
   // Scroll detection
   useEffect(() => {
@@ -108,7 +108,7 @@ const Navigation = () => {
   const navLinks = [
     { name: 'Главная', href: '/', isPage: true },
     { name: 'Каталог', href: '/catalog', isPage: true },
-    { name: 'О нас', href: '#about', isPage: false },
+    { name: 'Наша история', href: '#about', isPage: false },
     { name: 'Контакты', href: '#contact', isPage: false },
   ];
 
@@ -124,14 +124,11 @@ const Navigation = () => {
           onMouseEnter={() => isScrolled && setIsExpanded(true)}
           onMouseLeave={() => isScrolled && setIsExpanded(false)}
         >
+
+
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group shrink-0">
-            <div className="w-10 h-10 bg-door-black rounded-full flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-md">
-              <span className="text-white font-display font-bold text-lg">D</span>
-            </div>
-            <span className={`font-display font-semibold text-lg tracking-tight text-door-black ${isScrolled && !isExpanded ? 'hidden sm:block' : 'block'}`}>
-              DOORHANDLES
-            </span>
+            <ApolloLogo className="h-10 w-auto text-door-black hover:text-door-accent transition-colors duration-300" />
           </Link>
 
           {/* Desktop Navigation */}
@@ -159,17 +156,7 @@ const Navigation = () => {
 
           {/* Actions */}
           <div className={`flex items-center gap-2 shrink-0 ${isScrolled && !isExpanded ? '' : 'ml-4'}`}>
-            <button
-              className="relative p-2.5 bg-door-light/50 hover:bg-door-medium/20 rounded-full transition-colors duration-300"
-              aria-label="Cart"
-            >
-              <ShoppingBag className="w-5 h-5 text-door-dark" />
-              {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-door-accent text-white text-xs font-bold rounded-full flex items-center justify-center border-2 border-white">
-                  {cartCount}
-                </span>
-              )}
-            </button>
+
 
             <button
               className="md:hidden p-2.5 bg-door-light/50 hover:bg-door-medium/20 rounded-full transition-colors duration-300"
@@ -230,7 +217,7 @@ const Navigation = () => {
 
             <div className="p-6 border-t border-gray-100 bg-gray-50">
               <div className="flex items-center justify-between text-sm text-gray-500">
-                <span>© 2025 DoorHandles</span>
+                <span>© 2025 Apollo</span>
               </div>
             </div>
           </div>

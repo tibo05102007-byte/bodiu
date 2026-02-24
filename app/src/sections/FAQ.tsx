@@ -74,9 +74,14 @@ const FAQ = () => {
             <h2 className="font-display text-4xl sm:text-5xl font-bold text-door-black mb-6">Частые <br />Вопросы</h2>
             <p className="text-door-medium mb-8">Не нашли то, что искали? Свяжитесь с нашей службой поддержки для консультации.</p>
 
-            <button className="px-6 py-3 bg-white border border-gray-200 rounded-full font-medium text-door-black hover:bg-door-black hover:text-white transition-all shadow-sm">
+            <a
+              href="https://wa.me/77074209510"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block px-6 py-3 bg-white border border-gray-200 rounded-full font-medium text-door-black hover:bg-door-black hover:text-white transition-all shadow-sm"
+            >
               Связаться с нами
-            </button>
+            </a>
           </div>
 
           <div className="lg:col-span-8">

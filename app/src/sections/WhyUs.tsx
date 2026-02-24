@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { Gem, Hammer, ShieldCheck } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';

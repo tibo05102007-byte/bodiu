@@ -1,10 +1,8 @@
-import { useRef, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
+import { ArrowRight, ArrowLeft } from 'lucide-react';
+import useEmblaCarousel from 'embla-carousel-react';
+import { Button } from '@/components/ui/button';
 
 interface Category {
   id: number;
@@ -29,96 +27,90 @@ const categories: Category[] = [
 ];
 
 const Products = () => {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [hoveredId, setHoveredId] = useState<number | null>(null);
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    align: 'start',
+    containScroll: 'trimSnaps',
+    loop: false,
+    dragFree: true
+  });
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      const track = trackRef.current;
-      if (!track) return;
+  const scrollPrev = useCallback(() => {
+    if (emblaApi) emblaApi.scrollPrev();
+  }, [emblaApi]);
 
-      const trackWidth = track.scrollWidth;
-      const windowWidth = window.innerWidth;
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top top',
-          end: () => `+=${trackWidth - windowWidth + 100}`,
-          scrub: 1,
-          pin: true,
-          anticipatePin: 1,
-        }
-      });
-
-      tl.to(track, {
-        x: () => -(trackWidth - windowWidth),
-        ease: 'none',
-      });
-
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
+  const scrollNext = useCallback(() => {
+    if (emblaApi) emblaApi.scrollNext();
+  }, [emblaApi]);
 
   return (
     <section
       id="products"
-      ref={sectionRef}
-      className="relative w-full h-screen bg-door-light overflow-hidden flex flex-col justify-center"
+      className="relative w-full py-20 bg-door-light overflow-hidden flex flex-col justify-center"
     >
       {/* Background Watermark */}
-      <div className="absolute top-[10%] left-0 w-full pointer-events-none opacity-5">
+      <div className="absolute top-10 left-0 w-full pointer-events-none opacity-5">
         <h2 className="text-[15vw] font-display font-bold leading-none text-door-dark whitespace-nowrap pl-10">
           КАТАЛОГ
         </h2>
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-12 xl:px-20 mb-8 z-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-12 xl:px-20 mb-12 z-10">
         <div className="flex justify-between items-end">
           <div>
             <span className="text-door-accent font-medium tracking-wide uppercase text-sm">Продукция</span>
             <h3 className="font-display text-4xl font-bold text-door-black">Категории</h3>
           </div>
-          <div className="hidden sm:block text-door-medium text-sm">
-            Тяните для просмотра
+          <div className="flex gap-4">
+            <Button
+              variant="outline"
+              size="icon"
+              className="rounded-full w-12 h-12 border-door-dark/20 hover:bg-door-dark hover:text-white transition-all"
+              onClick={scrollPrev}
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              className="rounded-full w-12 h-12 border-door-dark/20 hover:bg-door-dark hover:text-white transition-all"
+              onClick={scrollNext}
+            >
+              <ArrowRight className="w-5 h-5" />
+            </Button>
           </div>
         </div>
       </div>
 
-      {/* Horizontal Track */}
-      <div
-        ref={trackRef}
-        className="flex gap-6 px-4 sm:px-6 lg:px-12 xl:px-20 w-max items-center"
-      >
-        {categories.map((cat) => (
-          <Link
-            to="/catalog"
-            key={cat.id}
-            className="relative w-[280px] sm:w-[320px] aspect-[3/4] shrink-0 group block"
-            onMouseEnter={() => setHoveredId(cat.id)}
-            onMouseLeave={() => setHoveredId(null)}
-          >
-            <div className="w-full h-full bg-white rounded-2xl overflow-hidden shadow-soft transition-all duration-500 group-hover:shadow-elevated group-hover:-translate-y-2">
-              <div className="h-2/3 w-full p-6 bg-gray-50 flex items-center justify-center">
-                <img
-                  src={cat.image}
-                  alt={cat.name}
-                  className="max-h-full max-w-full object-contain transition-transform duration-700 group-hover:scale-110"
-                />
-              </div>
-              <div className="h-1/3 p-6 flex flex-col justify-center relative bg-white">
-                <h4 className="font-display font-bold text-xl text-door-black mb-1 group-hover:text-door-accent transition-colors">{cat.name}</h4>
-                <p className="text-sm text-door-medium">{cat.count}</p>
+      {/* Horizontal Carousel */}
+      <div className="overflow-hidden" ref={emblaRef}>
+        <div className="flex gap-6 px-4 sm:px-6 lg:px-12 xl:px-20 select-none touch-pan-y">
+          {categories.map((cat) => (
+            <div key={cat.id} className="flex-[0_0_280px] sm:flex-[0_0_320px] min-w-0">
+              <Link
+                to="/catalog"
+                className="relative w-full aspect-[3/4] group block"
+              >
+                <div className="w-full h-full bg-white rounded-2xl overflow-hidden shadow-soft transition-all duration-500 group-hover:shadow-elevated group-hover:-translate-y-2">
+                  <div className="h-2/3 w-full p-6 bg-gray-50 flex items-center justify-center">
+                    <img
+                      src={cat.image}
+                      alt={cat.name}
+                      className="max-h-full max-w-full object-contain transition-transform duration-700 group-hover:scale-110"
+                    />
+                  </div>
+                  <div className="h-1/3 p-6 flex flex-col justify-center relative bg-white">
+                    <h4 className="font-display font-bold text-xl text-door-black mb-1 group-hover:text-door-accent transition-colors">{cat.name}</h4>
+                    <p className="text-sm text-door-medium">{cat.count}</p>
 
-                <div className="absolute bottom-6 right-6 w-10 h-10 bg-door-light rounded-full flex items-center justify-center transform translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300">
-                  <ArrowRight className="w-5 h-5 text-door-black" />
+                    <div className="absolute bottom-6 right-6 w-10 h-10 bg-door-light rounded-full flex items-center justify-center transform translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300">
+                      <ArrowRight className="w-5 h-5 text-door-black" />
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </Link>
             </div>
-          </Link>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );

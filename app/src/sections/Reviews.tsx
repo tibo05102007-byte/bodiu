@@ -45,7 +45,7 @@ const reviews = [
 
 const Reviews = () => {
   const row1Ref = useRef<HTMLDivElement>(null);
-  const row2Ref = useRef<HTMLDivElement>(null);
+
   const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -64,7 +64,7 @@ const Reviews = () => {
           duration: 100000,
           onUpdate: () => {
             // Base speed + scroll velocity
-            const vel = ScrollTrigger.limitCallbacks ? 0 : (ScrollTrigger as any).velocity || 0;
+            const vel = (ScrollTrigger as any).velocity || 0;
             const speed = (1 + Math.abs(vel / 500)) * direction;
 
             xPos -= speed;

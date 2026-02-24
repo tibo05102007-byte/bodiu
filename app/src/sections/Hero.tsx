@@ -8,6 +8,8 @@ const Hero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
+  const buttonsRef = useRef<HTMLDivElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
   const imageContainerRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
@@ -22,6 +24,16 @@ const Hero = () => {
         { y: 40, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.8 },
         '-=0.8'
+      )
+      .fromTo(buttonsRef.current,
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8 },
+        '-=0.6'
+      )
+      .fromTo(statsRef.current,
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8 },
+        '-=0.6'
       )
       .fromTo(imageContainerRef.current,
         { scale: 1.1, opacity: 0 },
@@ -72,23 +84,38 @@ const Hero = () => {
             </h1>
 
             <p ref={descriptionRef} className="text-xl text-door-dark max-w-lg leading-relaxed mb-10">
-              Точно инженерная дверная фурнитура, которая превращает пространства в незабываемые впечатления.
+              Точно инженерная дверная фурнитура, которая превращает пространства в незабываемые впечатления. Откройте для себя нашу коллекцию ручек ручной работы, где каждая деталь имеет значение.
             </p>
 
-            <div className="flex flex-wrap items-center gap-4">
+            <div ref={buttonsRef} className="flex flex-wrap items-center gap-4 mb-16">
               <button
                 onClick={scrollToProducts}
                 className="group inline-flex items-center gap-3 px-8 py-4 bg-door-black text-white font-medium rounded-full hover:bg-door-dark transition-all duration-300 shadow-card hover:shadow-elevated"
               >
-                Исследовать
+                Исследовать коллекцию
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
               </button>
               <button className="group inline-flex items-center gap-3 px-6 py-4 bg-white text-door-black font-medium rounded-full hover:bg-door-light transition-all duration-300 shadow-soft">
                 <span className="w-10 h-10 bg-door-black rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                   <Play className="w-4 h-4 text-white ml-0.5" fill="white" />
                 </span>
-                Видео
+                Смотреть историю
               </button>
+            </div>
+
+            <div ref={statsRef} className="grid grid-cols-3 gap-8 pt-8 border-t border-door-dark/10 max-w-2xl">
+              <div>
+                <h3 className="text-4xl font-bold text-door-black mb-1">500+</h3>
+                <p className="text-sm text-door-dark/60 font-medium">Премиум дизайнов</p>
+              </div>
+              <div className="border-l border-door-dark/10 pl-8">
+                <h3 className="text-4xl font-bold text-door-black mb-1">50K+</h3>
+                <p className="text-sm text-door-dark/60 font-medium">Довольных клиентов</p>
+              </div>
+              <div className="border-l border-door-dark/10 pl-8">
+                <h3 className="text-4xl font-bold text-door-black mb-1">15+</h3>
+                <p className="text-sm text-door-dark/60 font-medium">Лет опыта</p>
+              </div>
             </div>
           </div>
         </div>

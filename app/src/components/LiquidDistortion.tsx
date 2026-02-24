@@ -86,7 +86,7 @@ const LiquidDistortion = ({ imageSrc }: { imageSrc: string }) => {
         let animationId: number;
         let targetVelo = 0;
 
-        const onMouseMove = (e: MouseEvent) => {
+        const onMouseMove = () => {
             // Simple velocity simulation based on mouse movement speed could go here
             targetVelo = 1.0;
         };

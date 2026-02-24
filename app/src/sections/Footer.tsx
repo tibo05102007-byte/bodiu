@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import ApolloLogo from '../components/ApolloLogo';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -72,29 +73,7 @@ const Footer = () => {
     }
   };
 
-  const footerLinks = {
-    products: [
-      { name: 'Современная коллекция', href: '#' },
-      { name: 'Классическая коллекция', href: '#' },
-      { name: 'Умные ручки', href: '#' },
-      { name: 'Премиум серия', href: '#' },
-      { name: 'Новинки', href: '#' },
-    ],
-    company: [
-      { name: 'О нас', href: '#about' },
-      { name: 'Наша история', href: '#' },
-      { name: 'Карьера', href: '#' },
-      { name: 'Пресса', href: '#' },
-      { name: 'Блог', href: '#' },
-    ],
-    support: [
-      { name: 'Связаться с нами', href: '#contact' },
-      { name: 'Вопросы и ответы', href: '#' },
-      { name: 'Информация о доставке', href: '#' },
-      { name: 'Возвраты', href: '#' },
-      { name: 'Гарантия', href: '#' },
-    ],
-  };
+
 
   const socialLinks = [
     { icon: Instagram, href: '#', label: 'Instagram' },
@@ -143,8 +122,8 @@ const Footer = () => {
                   type="submit"
                   disabled={isSubscribed}
                   className={`px-8 py-4 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-2 ${isSubscribed
-                      ? 'bg-green-500 text-white'
-                      : 'bg-white text-door-black hover:bg-door-accent hover:text-white'
+                    ? 'bg-green-500 text-white'
+                    : 'bg-white text-door-black hover:bg-door-accent hover:text-white'
                     }`}
                 >
                   {isSubscribed ? (
@@ -165,18 +144,13 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Main Footer Content */}
       <div className="footer-content-stagger w-full px-4 sm:px-6 lg:px-12 xl:px-20 py-16">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 justify-between">
           {/* Brand Column */}
-          <div className="col-span-2 md:col-span-4 lg:col-span-1 mb-8 lg:mb-0">
+          <div className="mb-8 lg:mb-0">
+
             <div className="flex items-center gap-2 mb-6">
-              <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
-                <span className="text-door-black font-display font-bold text-lg">D</span>
-              </div>
-              <span className="font-display font-semibold text-lg tracking-tight">
-                DOORHANDLES
-              </span>
+              <ApolloLogo className="h-12 w-auto text-white" />
             </div>
             <p className="text-white/60 text-sm leading-relaxed mb-6 max-w-xs">
               Премиум дверная фурнитура, созданная с точностью и страстью.
@@ -196,88 +170,46 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Products */}
-          <div>
-            <h4 className="font-display font-semibold text-white mb-4">Товары</h4>
-            <ul className="space-y-3">
-              {footerLinks.products.map((link, index) => (
-                <li key={index}>
-                  <a
-                    href={link.href}
-                    className="text-white/60 hover:text-white transition-colors duration-300 text-sm"
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Company */}
-          <div>
-            <h4 className="font-display font-semibold text-white mb-4">Компания</h4>
-            <ul className="space-y-3">
-              {footerLinks.company.map((link, index) => (
-                <li key={index}>
-                  <a
-                    href={link.href}
-                    className="text-white/60 hover:text-white transition-colors duration-300 text-sm"
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Support */}
-          <div>
-            <h4 className="font-display font-semibold text-white mb-4">Поддержка</h4>
-            <ul className="space-y-3">
-              {footerLinks.support.map((link, index) => (
-                <li key={index}>
-                  <a
-                    href={link.href}
-                    className="text-white/60 hover:text-white transition-colors duration-300 text-sm"
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
           {/* Contact */}
-          <div>
+          <div className="md:text-right flex flex-col md:items-end">
             <h4 className="font-display font-semibold text-white mb-4">Контакты</h4>
             <ul className="space-y-4">
               <li>
                 <a
                   href="mailto:hello@doorhandles.com"
-                  className="flex items-center gap-3 text-white/60 hover:text-white transition-colors duration-300 text-sm"
+                  className="flex items-center gap-3 text-white/60 hover:text-white transition-colors duration-300 text-sm md:justify-end"
                 >
-                  <Mail className="w-4 h-4 text-door-accent" />
+                  <Mail className="w-4 h-4 text-door-accent order-first md:order-last" />
                   hello@doorhandles.com
                 </a>
               </li>
               <li>
                 <a
-                  href="tel:+1234567890"
-                  className="flex items-center gap-3 text-white/60 hover:text-white transition-colors duration-300 text-sm"
+                  href="tel:+77074209510"
+                  className="flex items-center gap-3 text-white/60 hover:text-white transition-colors duration-300 text-sm md:justify-end"
                 >
-                  <Phone className="w-4 h-4 text-door-accent" />
-                  +1 (234) 567-890
+                  <Phone className="w-4 h-4 text-door-accent order-first md:order-last" />
+                  +7 707 420 9510
                 </a>
               </li>
               <li>
-                <div className="flex items-start gap-3 text-white/60 text-sm">
-                  <MapPin className="w-4 h-4 text-door-accent flex-shrink-0 mt-0.5" />
+                <div className="flex items-start gap-3 text-white/60 text-sm md:justify-end">
+                  <MapPin className="w-4 h-4 text-door-accent flex-shrink-0 mt-0.5 order-first md:order-last" />
                   <span>
-                    123 Дизайн Дистрикт
-                    <br />
-                    Нью-Йорк, NY 10001
+                    Алматы
                   </span>
                 </div>
+              </li>
+              <li>
+                <a
+                  href="https://wa.me/77074209510"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-door-accent text-white rounded-full text-sm font-medium hover:bg-white hover:text-door-black transition-all duration-300 shadow-md md:ml-auto"
+                >
+                  Связаться с нами
+                  <ArrowRight className="w-4 h-4" />
+                </a>
               </li>
             </ul>
           </div>
@@ -288,7 +220,7 @@ const Footer = () => {
       <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 py-6 border-t border-white/10">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-white/40 text-sm">
-            © 2025 DOORHANDLES. Все права защищены.
+            © 2025 Apollo. Все права защищены.
           </p>
           <div className="flex items-center gap-6">
             <a
