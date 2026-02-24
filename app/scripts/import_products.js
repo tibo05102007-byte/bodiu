@@ -60,7 +60,7 @@ function determineBrandAndColor(folderName, parentFolderName) {
     return { brand, colors };
 }
 
-function processDirectory(dirPath: string, parentStr: string = '') {
+function processDirectory(dirPath, parentStr = '') {
     const items = fs.readdirSync(dirPath, { withFileTypes: true });
 
     // Find first image in the directory
