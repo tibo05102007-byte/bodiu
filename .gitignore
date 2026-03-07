@@ -26,8 +26,11 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Public images (large/generated assets)
-app/public/images/
+# Public images - keep product photos but ignore temp files
+# app/public/images/  <-- ЗАКОММЕНТИРОВАНО чтобы фото не пропадали
+app/public/images/products/duplicates/
+app/public/images/products/auto/
+*.tmp
 
 # Misc
 coverage/
