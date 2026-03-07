@@ -242,6 +242,37 @@ const CategoryPage = () => {
 
             {/* Products Grid Content */}
             <div className="flex-1 flex flex-col">
+
+              {/* Subcategories Visual Grid */}
+              {!activeSubCategory && currentCategoryData?.subcategories && (
+                <div className="mb-10">
+                  <h2 className="text-2xl font-display font-bold text-door-black mb-6">Категории</h2>
+                  <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {currentCategoryData.subcategories.map(sub => (
+                      <button
+                        key={sub.id}
+                        onClick={() => setActiveSubCategory(sub.id)}
+                        className="group relative rounded-xl overflow-hidden aspect-[4/3] bg-door-light border border-gray-100 transition-all hover:shadow-md hover:-translate-y-1 text-left"
+                      >
+                        {sub.image ? (
+                          <div className="absolute inset-0 bg-white p-4 flex items-center justify-center">
+                            <img src={sub.image} alt={sub.name} className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110" />
+                          </div>
+                        ) : (
+                          <div className="absolute inset-0 bg-gray-50 flex items-center justify-center">
+                            <span className="text-gray-400 text-sm">Нет фото</span>
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-door-black/80 via-transparent to-transparent opacity-90 transition-opacity group-hover:opacity-100" />
+                        <div className="absolute bottom-0 left-0 w-full p-4">
+                          <span className="text-white font-medium drop-shadow-md text-sm sm:text-base leading-tight block">{sub.name}</span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Controls */}
               <div className="flex justify-between items-center mb-6">
                 <span className="text-door-medium">

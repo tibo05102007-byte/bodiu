@@ -5,7 +5,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import HomePage from './pages/HomePage';
-import CategoryPage from './pages/CategoryPage';
+import CatalogPage from './pages/CatalogPage';
 
 import './App.css';
 
@@ -42,7 +42,8 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/catalog" element={<CategoryPage />} />
+        <Route path="/catalog" element={<CatalogPage />} />
+        <Route path="/catalog/:categoryId" element={<CatalogPage />} />
       </Routes>
     </BrowserRouter>
   );
