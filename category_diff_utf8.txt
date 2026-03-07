@@ -1,0 +1,857 @@
+﻿diff --git a/app/src/pages/CategoryPage.tsx b/app/src/pages/CategoryPage.tsx
+index 6ef8bf0..8d3fc26 100644
+--- a/app/src/pages/CategoryPage.tsx
++++ b/app/src/pages/CategoryPage.tsx
+@@ -1,672 +1,15 @@
+-import { useEffect, useRef, useState } from 'react';
+-import { Grid3X3, LayoutList } from 'lucide-react';
++import { useEffect, useRef, useState, useMemo } from 'react';
++import { Grid3X3, LayoutList, ChevronDown } from 'lucide-react';
+ import gsap from 'gsap';
+ import { ScrollTrigger } from 'gsap/ScrollTrigger';
+ import ApolloLogo from '../components/ApolloLogo';
+ 
+ gsap.registerPlugin(ScrollTrigger);
+ 
+-interface Product {
+-  id: number;
+-  name: string;
+-  image: string;
+-  category: string;
+-  subcategory?: string;
+-  brand: string;
+-  colors: string[];
+-  inStock: boolean;
+-  isNew?: boolean;
+-  isBestseller?: boolean;
+-  isSale?: boolean;
+-  description?: string;
+-}
+-
+-interface SubCategory {
+-  id: string;
+-  name: string;
+-}
+-
+-interface Category {
+-  id: string;
+-  name: string;
+-  description: string;
+-  bannerImage: string;
+-  subcategories?: SubCategory[];
+-}
+-
+-const categories: Category[] = [
+-  {
+-    id: 'door_handles',
+-    name: '╨Ф╨▓╨╡╤А╨╜╤Л╨╡ ╤А╤Г╤З╨║╨╕',
+-    description: '╨Ю╤Б╨╜╨╛╨▓╨╜╨╛╨╣ ╤Н╨╗╨╡╨╝╨╡╨╜╤В ╨┤╨╕╨╖╨░╨╣╨╜╨░. ╨и╨╕╤А╨╛╨║╨╕╨╣ ╨▓╤Л╨▒╨╛╤А ╤А╤Г╤З╨╡╨║ ╨┤╨╗╤П ╨╗╤О╨▒╤Л╤Е ╤В╨╕╨┐╨╛╨▓ ╨┤╨▓╨╡╤А╨╡╨╣.',
+-    bannerImage: '/images/products/alfa-black.jpg',
+-    subcategories: [
+-      { id: 'rosette_handles', name: '╨а╤Г╤З╨║╨╕ ╨╜╨░ ╤А╨╛╨╖╨╡╤В╨║╨╡' },
+-      { id: 'pull_handles', name: '╨а╤Г╤З╨║╨╕-╤Б╨║╨╛╨▒╤Л' }
+-    ]
+-  },
+-  {
+-    id: 'door_hinges',
+-    name: '╨Ф╨▓╨╡╤А╨╜╤Л╨╡ ╨┐╨╡╤В╨╗╨╕',
+-    description: '╨Э╨░╨┤╨╡╨╢╨╜╤Л╨╡ ╨╕ ╨┤╨╛╨╗╨│╨╛╨▓╨╡╤З╨╜╤Л╨╡ ╨┐╨╡╤В╨╗╨╕ ╨┤╨╗╤П ╨┐╨╗╨░╨▓╨╜╨╛╨│╨╛ ╤Е╨╛╨┤╨░ ╨▓╨░╤И╨╡╨╣ ╨┤╨▓╨╡╤А╨╕.',
+-    bannerImage: '/images/products/hinge-overlay.jpg',
+-    subcategories: [
+-      { id: 'hidden_hinges', name: '╨б╨║╤А╤Л╤В╤Л╨╡ ╨┐╨╡╤В╨╗╨╕' },
+-      { id: 'mortise_hinges', name: '╨Т╤А╨╡╨╖╨╜╤Л╨╡ ╨┐╨╡╤В╨╗╨╕' },
+-      { id: 'spring_hinges', name: '╨Я╤А╤Г╨╢╨╕╨╜╨╜╤Л╨╡ (╨▒╨░╤А╨╜╤Л╨╡) ╨┐╨╡╤В╨╗╨╕' },
+-      { id: 'overlay_hinges', name: '╨Э╨░╨║╨╗╨░╨┤╨╜╤Л╨╡ ╨┐╨╡╤В╨╗╨╕ (┬л╨▒╨░╨▒╨╛╤З╨║╨╕┬╗)' }
+-    ]
+-  },
+-  {
+-    id: 'locks_and_security',
+-    name: '╨Ч╨░╨╝╨║╨╕ ╨╕ ╨▒╨╡╨╖╨╛╨┐╨░╤Б╨╜╨╛╤Б╤В╤М',
+-    description: '╨Т╤Л╤Б╨╛╨║╨░╤П ╤Б╨╡╨║╤А╨╡╤В╨╜╨╛╤Б╤В╤М ╨╕ ╨╜╨░╨┤╨╡╨╢╨╜╨░╤П ╨╖╨░╤Й╨╕╤В╨░ ╨┤╨╗╤П ╨▓╨░╤И╨╡╨│╨╛ ╨┤╨╛╨╝╨░.',
+-    bannerImage: '/images/products/cylinder.png',
+-    subcategories: [
+-      { id: 'mortise_locks', name: '╨Т╤А╨╡╨╖╨╜╤Л╨╡ ╨╖╨░╨╝╨║╨╕ ╨╕ ╨╝╨╡╤Е╨░╨╜╨╕╨╖╨╝╤Л' },
+-      { id: 'smart_locks', name: '╨н╨╗╨╡╨║╤В╤А╨╛╨╜╨╜╤Л╨╡ (╤Г╨╝╨╜╤Л╨╡) ╨╖╨░╨╝╨║╨╕' },
+-      { id: 'cylinders', name: '╨ж╨╕╨╗╨╕╨╜╨┤╤А╤Л ╨┤╨╗╤П ╨╖╨░╨╝╨║╨╛╨▓ / ╨б╨╡╤А╨┤╤Ж╨╡╨▓╨╕╨╜╤Л' },
+-      { id: 'padlocks', name: '╨Э╨░╨▓╨╡╤Б╨╜╤Л╨╡ ╨╖╨░╨╝╨║╨╕' }
+-    ]
+-  },
+-  {
+-    id: 'door_fittings',
+-    name: '╨Ф╨▓╨╡╤А╨╜╨░╤П ╤Д╤Г╤А╨╜╨╕╤В╤Г╤А╨░',
+-    description: '╨Р╨║╤Б╨╡╤Б╤Б╤Г╨░╤А╤Л ╨╕ ╨┤╨╡╨║╨╛╤А╨░╤В╨╕╨▓╨╜╤Л╨╡ ╤Н╨╗╨╡╨╝╨╡╨╜╤В╤Л, ╨╖╨░╨▓╨╡╤А╤И╨░╤О╤Й╨╕╨╡ ╨╛╨▒╤А╨░╨╖.',
+-    bannerImage: '/images/products/escutcheon.jpg',
+-    subcategories: [
+-      { id: 'latches_and_bolts', name: '╨Ч╨░╤Й╨╡╨╗╨║╨╕ ╨╕ ╨╖╨░╨┤╨▓╨╕╨╢╨║╨╕' },
+-      { id: 'wc_and_escutcheons', name: '╨д╨╕╨║╤Б╨░╤В╨╛╤А╤Л (WC) ╨╕ ╨╜╨░╨║╨╗╨░╨┤╨║╨╕' },
+-      { id: 'door_stops', name: '╨Ф╨▓╨╡╤А╨╜╤Л╨╡ ╤Г╨┐╨╛╤А╤Л / ╨Ю╨│╤А╨░╨╜╨╕╤З╨╕╤В╨╡╨╗╨╕' },
+-      { id: 'door_closers', name: '╨Ф╨╛╨▓╨╛╨┤╤З╨╕╨║╨╕' }
+-    ]
+-  },
+-  {
+-    id: 'sliding_systems',
+-    name: '╨а╨░╨╖╨┤╨▓╨╕╨╢╨╜╤Л╨╡ ╤Б╨╕╤Б╤В╨╡╨╝╤Л',
+-    description: '╨н╨║╨╛╨╜╨╛╨╝╨╕╤П ╨┐╤А╨╛╤Б╤В╤А╨░╨╜╤Б╤В╨▓╨░ ╨╕ ╤Б╨╛╨▓╤А╨╡╨╝╨╡╨╜╨╜╤Л╨╣ ╤Б╤В╨╕╨╗╤М.',
+-    bannerImage: '/images/products/terra-sn.jpg',
+-  }
+-];
+-
+-const products: Product[] = [
+-  {
+-    "id": 2000,
+-    "name": "WC-CYL",
+-    "category": "door_fittings",
+-    "subcategory": "wc_and_escutcheons",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2000_IMG_2819.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2001,
+-    "name": "╨Т╨а╨Х╨Ч╨Э╨л╨Х ╨Я╨Х╨в╨Ы╨Ш",
+-    "category": "door_hinges",
+-    "subcategory": "mortise_hinges",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2001_IMG_5139.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2002,
+-    "name": "╨Ч╨Р╨Ь╨Ъ╨Ш",
+-    "category": "locks_and_security",
+-    "subcategory": "mortise_locks",
+-    "brand": "Status",
+-    "image": "/images/products/auto/2002_IMG_1361 тАФ ╨║╨╛╨┐╨╕╤П.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2003,
+-    "name": "╨Ь╨░╨│╨╜╨╕╤В╨╜╤Л╨╡ ╨╝╨╡╨╢╨║╨╛╨╝╨╜╨░╤В╨╜╤Л╨╡ ╨╖╨░╨╝╨║╨╕",
+-    "category": "locks_and_security",
+-    "subcategory": "mortise_locks",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2003_IMG_7840.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2004,
+-    "name": "apolinho",
+-    "category": "locks_and_security",
+-    "subcategory": "mortise_locks",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2004_IMG_6540.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2005,
+-    "name": "CX",
+-    "category": "locks_and_security",
+-    "subcategory": "mortise_locks",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2005_IMG_0070.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2006,
+-    "name": "MG",
+-    "category": "locks_and_security",
+-    "subcategory": "mortise_locks",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2006_IMG_0311.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2007,
+-    "name": "╨Ь╨Х╨е╨Р╨Э╨Ш╨з╨Х╨б╨Ъ╨Ш╨Щ",
+-    "category": "locks_and_security",
+-    "subcategory": "mortise_locks",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2007_IMG_0072.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2008,
+-    "name": "╨╜╨░╨▓╨╡╤Б╤Л ╨▒╨░╨▒╨╛╤З╨║╨╕ ╨░╨┐╨╛╨╗╨╗╨╛╤В",
+-    "category": "door_hinges",
+-    "subcategory": "overlay_hinges",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2008_IMG_0908.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2009,
+-    "name": "╨Э╨░╨▓╨╡╤Б╤Л",
+-    "category": "door_hinges",
+-    "subcategory": "overlay_hinges",
+-    "brand": "Status",
+-    "image": "/images/products/auto/2009_IMG_0366.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2010,
+-    "name": "╨Ф╨Ю╨Т╨Ю╨Ф╨з╨Ш╨Ъ╨Ш ╨Ф╨Т╨Х╨а╨Э╨л╨Х",
+-    "category": "door_fittings",
+-    "subcategory": "door_closers",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2010_IMG_0373.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2011,
+-    "name": "╨Ч╨Р╨Ф╨Т╨Ш╨Ц╨Ъ╨Р",
+-    "category": "door_fittings",
+-    "subcategory": "latches_and_bolts",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2011_IMG_4348.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2012,
+-    "name": "╨Ч╨Р╨Ф╨Т╨Ш╨Ц╨Ъ╨Р",
+-    "category": "door_fittings",
+-    "subcategory": "latches_and_bolts",
+-    "brand": "Status",
+-    "image": "/images/products/auto/2012_D-45 MSN.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2013,
+-    "name": "╨Ч╨Р╨Ь╨Ъ╨Ш",
+-    "category": "locks_and_security",
+-    "subcategory": "mortise_locks",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2013_IMG_4237.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2014,
+-    "name": "CY-03S",
+-    "category": "door_fittings",
+-    "subcategory": "latches_and_bolts",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2014_IMG_4350.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2015,
+-    "name": "╨Ч╨░╤Й╨╡╨╗╨║╨░",
+-    "category": "door_fittings",
+-    "subcategory": "latches_and_bolts",
+-    "brand": "Status",
+-    "image": "/images/products/auto/2015_D-45 MSN.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2016,
+-    "name": "╨Ь╨Р╨У╨Э╨Ш╨в╨Э╨л╨Х ╨Ч╨Р╨й╨Х╨Ы╨Ъ╨Ш",
+-    "category": "door_fittings",
+-    "subcategory": "latches_and_bolts",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2016_IMG_1372.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2017,
+-    "name": "╨Э╨Р╨Ъ╨Ы╨Р╨Ф╨Ъ╨Ш",
+-    "category": "door_fittings",
+-    "subcategory": "wc_and_escutcheons",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2017_2025-07-14 17-50-35 (1).JPEG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2018,
+-    "name": "╨Я╨а╨г╨Ц╨Ш╨Э╨Э╨Р╨п ╨Я╨Х╨в╨Ы╨п",
+-    "category": "door_hinges",
+-    "subcategory": "spring_hinges",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2018_IMG_4853.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2019,
+-    "name": "╨Ф╨╗╤П ╤А╨░╨╖╨┤╨▓╨╕╨╢╨╜╤Л╤Е ╨┤╨▓╨╡╤А╨╡╨╣",
+-    "category": "sliding_systems",
+-    "subcategory": "",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2019_IMG_7004.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2020,
+-    "name": "╨а╤Г╤З╨║╨░ Neon Model",
+-    "category": "door_handles",
+-    "subcategory": "rosette_handles",
+-    "brand": "Neon",
+-    "image": "/images/products/auto/2020_2025-07-14 18-17-27 (1).JPEG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2021,
+-    "name": "╨а╤Г╤З╨║╨░ ╨Р╨Ц╨г╨а",
+-    "category": "door_handles",
+-    "subcategory": "rosette_handles",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2021_IMG_1752.PNG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2022,
+-    "name": "╨а╤Г╤З╨║╨░ ╨С╨Х╨Ы╨л╨Х",
+-    "category": "door_handles",
+-    "subcategory": "rosette_handles",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2022_IMG_0906.JPG",
+-    "colors": [
+-      "╨С╨╡╨╗╤Л╨╣"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2023,
+-    "name": "╨а╤Г╤З╨║╨░ ╨С╨а╨Ю╨Э╨Ч╨Р",
+-    "category": "door_handles",
+-    "subcategory": "rosette_handles",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2023_IMG_1239.JPG",
+-    "colors": [
+-      "╨С╤А╨╛╨╜╨╖╨░"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2024,
+-    "name": "╨а╤Г╤З╨║╨░ ╨│╤А╨░╤Д╨╕╤В",
+-    "category": "door_handles",
+-    "subcategory": "rosette_handles",
+-    "brand": "Status",
+-    "image": "/images/products/auto/2024_IMG_1668.JPG",
+-    "colors": [
+-      "╨У╤А╨░╤Д╨╕╤В"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2025,
+-    "name": "╨а╤Г╤З╨║╨░ ╨Ч╨Ю╨Ы╨Ю╨в╨Ю",
+-    "category": "door_handles",
+-    "subcategory": "rosette_handles",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2025_IMG_0204.JPG",
+-    "colors": [
+-      "╨Ч╨╛╨╗╨╛╤В╨╛"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2026,
+-    "name": "╨а╤Г╤З╨║╨░ ╨Ч╨╛╨╗╨╛╤В╨╛",
+-    "category": "door_handles",
+-    "subcategory": "rosette_handles",
+-    "brand": "Status",
+-    "image": "/images/products/auto/2026_IMG_0351.JPG",
+-    "colors": [
+-      "╨Ч╨╛╨╗╨╛╤В╨╛"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2027,
+-    "name": "╨а╤Г╤З╨║╨░ ╨Ь╨Р╨в╨Ю╨Т╨л╨Щ ╨е╨а╨Ю╨Ь",
+-    "category": "door_handles",
+-    "subcategory": "rosette_handles",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2027_IMG_3752.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2028,
+-    "name": "╨а╤Г╤З╨║╨░ ╨Ь╨Р╨в╨Ю╨Т╨л╨Щ ╨з╨Х╨а╨Э╨л╨Щ ╨Э╨Ш╨Ъ╨Х╨Ы╨м",
+-    "category": "door_handles",
+-    "subcategory": "rosette_handles",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2028_IMG_0202.JPG",
+-    "colors": [
+-      "╨з╨╡╤А╨╜╤Л╨╣"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2029,
+-    "name": "╨а╤Г╤З╨║╨░ ╤Б╨╡╤А╨╡╨▒╤А╨╛",
+-    "category": "door_handles",
+-    "subcategory": "rosette_handles",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2029_IMG_0203.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2030,
+-    "name": "╨а╤Г╤З╨║╨░ ╤Б╨╡╤А╨╡╨▒╤А╨╛",
+-    "category": "door_handles",
+-    "subcategory": "rosette_handles",
+-    "brand": "Status",
+-    "image": "/images/products/auto/2030_IMG_0360.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2031,
+-    "name": "╨а╤Г╤З╨║╨░ (1)",
+-    "category": "door_handles",
+-    "subcategory": "rosette_handles",
+-    "brand": "Status",
+-    "image": "/images/products/auto/2031_Alba Mbn.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2032,
+-    "name": "╨а╤Г╤З╨║╨░ ╨д╤А╨░╨╜╤Ж╤Г╨╖╤Б╨║╨╛╨╡ ╨╖╨╛╨╗╨╛╤В╨╛",
+-    "category": "door_handles",
+-    "subcategory": "rosette_handles",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2032_IMG_0205.JPG",
+-    "colors": [
+-      "╨Ч╨╛╨╗╨╛╤В╨╛"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2033,
+-    "name": "╨а╤Г╤З╨║╨░ ╨е╨а╨Ю╨Ь",
+-    "category": "door_handles",
+-    "subcategory": "rosette_handles",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2033_IMG_1661.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2034,
+-    "name": "╨а╤Г╤З╨║╨░ ╨з╨Х╨а╨Э╨л╨Х",
+-    "category": "door_handles",
+-    "subcategory": "rosette_handles",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2034_IMG_0210.JPG",
+-    "colors": [
+-      "╨з╨╡╤А╨╜╤Л╨╣"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2035,
+-    "name": "╨а╤Г╤З╨║╨░ ╨з╨Х╨а╨Э╨л╨Х",
+-    "category": "door_handles",
+-    "subcategory": "rosette_handles",
+-    "brand": "Status",
+-    "image": "/images/products/auto/2035_IMG_0313.JPG",
+-    "colors": [
+-      "╨з╨╡╤А╨╜╤Л╨╣"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2036,
+-    "name": "╨а╤Г╤З╨║╨░ ╨а╤Г╤З╨║╨╕ ╤Б╨║╨╛╨▒╤Л",
+-    "category": "door_handles",
+-    "subcategory": "pull_handles",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2036_H-075 FG.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2037,
+-    "name": "╨б╨Х╨а╨Ф╨Х╨ж╨Х╨Т╨Ш╨Э╨л",
+-    "category": "locks_and_security",
+-    "subcategory": "cylinders",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2037_IMG_4883.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2038,
+-    "name": "╨а╤Г╤З╨║╨░ ╨б╨Ъ╨Ю╨С╨л ╨Ф╨Ы╨п ╨Ф╨Т╨Х╨а╨Э╨л╨е ╨а╨г╨з╨Х╨Ъ",
+-    "category": "door_handles",
+-    "subcategory": "pull_handles",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2038_H-075 FG.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2039,
+-    "name": "DIAMOND",
+-    "category": "door_hinges",
+-    "subcategory": "hidden_hinges",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2039_IMG_0068.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2040,
+-    "name": "╤Б╨╡╨║╤А╨╡╤В ╨┐╨╡╤В╨╗╨╕",
+-    "category": "door_hinges",
+-    "subcategory": "hidden_hinges",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2040_IMG_7706.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2041,
+-    "name": "╨б╨в╨Ш╨а╨Р╨Ы╨Ъ╨Р",
+-    "category": "door_fittings",
+-    "subcategory": "door_stops",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2041_IMG_2762.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2042,
+-    "name": "╨б╨в╨Ю╨Я╨Я╨Х╨а",
+-    "category": "door_fittings",
+-    "subcategory": "door_stops",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2042_IMG_2014.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2043,
+-    "name": "╨б╨в╨Ю╨Я╨Я╨Х╨а╨л ╨Р╨Я╨Ю╨Ы╨Ы╨Ю",
+-    "category": "door_fittings",
+-    "subcategory": "door_stops",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2043_DOOR STOP BLACK.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2044,
+-    "name": "╨и╨Я╨Ш╨Э╨У╨Р╨Ы╨Х╨в",
+-    "category": "door_fittings",
+-    "subcategory": "door_stops",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2044_IMG_1367.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2045,
+-    "name": "╨а╨Ю╨Ы╨Ш╨Ъ╨Ю╨Т╨л╨Щ ╨д╨Ш╨Ъ╨б╨Р╨в╨Ю╨а",
+-    "category": "door_fittings",
+-    "subcategory": "wc_and_escutcheons",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2045_IMG_3592.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2046,
+-    "name": "╨и╨░╤А╨╕╨║╨╛╨▓╤Л╨╣ ╤Д╨╕╨║╤Б╨░╤В╨╛╤А",
+-    "category": "door_fittings",
+-    "subcategory": "wc_and_escutcheons",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2046_IMG_1374.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  },
+-  {
+-    "id": 2047,
+-    "name": "╨н╨Ы╨Х╨Ъ╨в╨а╨Ю╨Э╨Э╨л╨Х ╨Ф╨Т╨Х╨а╨Э╨л╨Х ╨Ч╨Р╨Ь╨Ъ╨Ш",
+-    "category": "locks_and_security",
+-    "subcategory": "smart_locks",
+-    "brand": "Apollo",
+-    "image": "/images/products/auto/2047_IMG_4253.JPG",
+-    "colors": [
+-      "╨е╤А╨╛╨╝"
+-    ],
+-    "inStock": true
+-  }
+-];
++import { products } from '../data/products';
++import { categories } from '../data/categories';
++
++const ITEMS_PER_PAGE = 12;
+ 
+ const CategoryPage = () => {
+   const [activeCategory, setActiveCategory] = useState<string>('door_handles');
+@@ -680,9 +23,17 @@ const CategoryPage = () => {
+   const [sortBy, setSortBy] = useState<string>('popular');
+   const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
+ 
++  // Pagination State
++  const [visibleCount, setVisibleCount] = useState<number>(ITEMS_PER_PAGE);
++
+   const pageRef = useRef<HTMLDivElement>(null);
+   const productsRef = useRef<HTMLDivElement>(null);
+ 
++  // Reset pagination when category or filters change
++  useEffect(() => {
++    setVisibleCount(ITEMS_PER_PAGE);
++  }, [activeCategory, activeSubCategory, selectedBrands, selectedColors, sortBy]);
++
+   useEffect(() => {
+     setActiveSubCategory(null);
+     setSelectedBrands([]);
+@@ -703,23 +54,30 @@ const CategoryPage = () => {
+   const currentCategoryData = categories.find(c => c.id === activeCategory);
+ 
+   // Collect available filters for current category
+-  const availableBrands = Array.from(new Set(products.filter(p => p.category === activeCategory).map(p => p.brand)));
+-  const availableColors = Array.from(new Set(products.filter(p => p.category === activeCategory).flatMap(p => p.colors)));
++  const availableBrands = useMemo(() => Array.from(new Set(products.filter(p => p.category === activeCategory).map(p => p.brand))), [activeCategory]);
++  const availableColors = useMemo(() => Array.from(new Set(products.filter(p => p.category === activeCategory).flatMap(p => p.colors))), [activeCategory]);
+ 
+-  const filteredProducts = products.filter(p => {
++  const filteredProducts = useMemo(() => products.filter(p => {
+     if (p.category !== activeCategory) return false;
+     if (activeSubCategory && p.subcategory !== activeSubCategory) return false;
+     if (selectedBrands.length > 0 && !selectedBrands.includes(p.brand)) return false;
+     if (selectedColors.length > 0 && !p.colors.some(c => selectedColors.includes(c))) return false;
+     return true;
+-  });
++  }), [activeCategory, activeSubCategory, selectedBrands, selectedColors]);
+ 
+-  const sortedProducts = [...filteredProducts].sort((a, b) => {
++  const sortedProducts = useMemo(() => [...filteredProducts].sort((a, b) => {
+     switch (sortBy) {
+       case 'newest': return (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0);
+-      default: return 0;
++      default: return 0; // Or define a 'popular' sorting logic
+     }
+-  });
++  }), [filteredProducts, sortBy]);
++
++  const visibleProducts = sortedProducts.slice(0, visibleCount);
++  const hasMore = visibleCount < sortedProducts.length;
++
++  const handleLoadMore = () => {
++    setVisibleCount(prev => prev + ITEMS_PER_PAGE);
++  };
+ 
+   const scrollToProducts = () => {
+     productsRef.current?.scrollIntoView({ behavior: 'smooth' });
+@@ -883,7 +241,7 @@ const CategoryPage = () => {
+             </aside>
+ 
+             {/* Products Grid Content */}
+-            <div className="flex-1">
++            <div className="flex-1 flex flex-col">
+               {/* Controls */}
+               <div className="flex justify-between items-center mb-6">
+                 <span className="text-door-medium">
+@@ -908,47 +266,63 @@ const CategoryPage = () => {
+ 
+               {/* Grid */}
+               {sortedProducts.length > 0 ? (
+-                <div className={`grid gap-6 ${viewMode === 'grid'
+-                  ? 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-3'
+-                  : 'grid-cols-1'
+-                  }`}>
+-                  {sortedProducts.map((product) => (
+-                    <div
+-                      key={product.id}
+-                      className={`group relative bg-door-light rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-lg ${viewMode === 'list' ? 'flex gap-6 items-center' : ''
+-                        }`}
+-                      onMouseEnter={() => setHoveredProduct(product.id)}
+-                      onMouseLeave={() => setHoveredProduct(null)}
+-                    >
+-                      {/* Image */}
+-                      <div className={`relative overflow-hidden bg-white p-6 ${viewMode === 'list' ? 'w-48 h-48 shrink-0' : 'aspect-[4/5]'
+-                        }`}>
+-                        <img
+-                          src={product.image}
+-                          alt={product.name}
+-                          className={`w-full h-full object-contain transition-all duration-700 ${hoveredProduct === product.id ? 'scale-110' : 'scale-100'
+-                            }`}
+-                        />
+-
+-                        {/* Badges */}
+-                        <div className="absolute top-3 left-3 flex flex-col gap-2">
+-                          {product.isNew && <span className="px-2 py-1 bg-door-accent text-white text-[10px] font-bold uppercase rounded">New</span>}
+-                          {product.isBestseller && <span className="px-2 py-1 bg-door-black text-white text-[10px] font-bold uppercase rounded">Hit</span>}
++                <>
++                  <div className={`grid gap-6 ${viewMode === 'grid'
++                    ? 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-3'
++                    : 'grid-cols-1'
++                    }`}>
++                    {visibleProducts.map((product) => (
++                      <div
++                        key={product.id}
++                        className={`group relative bg-door-light rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-lg ${viewMode === 'list' ? 'flex gap-6 items-center' : ''
++                          }`}
++                        onMouseEnter={() => setHoveredProduct(product.id)}
++                        onMouseLeave={() => setHoveredProduct(null)}
++                      >
++                        {/* Image - Implemented Lazy Loading */}
++                        <div className={`relative overflow-hidden bg-white p-6 flex items-center justify-center ${viewMode === 'list' ? 'w-48 h-48 shrink-0' : 'aspect-[4/5]'
++                          }`}>
++                          <img
++                            src={product.image}
++                            alt={product.name}
++                            loading="lazy"
++                            className={`max-w-full max-h-full object-contain transition-all duration-700 ${hoveredProduct === product.id ? 'scale-110' : 'scale-100'
++                              }`}
++                          />
++
++                          {/* Badges */}
++                          <div className="absolute top-3 left-3 flex flex-col gap-2">
++                            {product.isNew && <span className="px-2 py-1 bg-door-accent text-white text-[10px] font-bold uppercase rounded">New</span>}
++                            {product.isBestseller && <span className="px-2 py-1 bg-door-black text-white text-[10px] font-bold uppercase rounded">Hit</span>}
++                          </div>
+                         </div>
+-                      </div>
+ 
+-                      {/* Info */}
+-                      <div className="p-5 flex-1">
+-                        <div className="text-xs text-door-medium uppercase tracking-wider mb-1">
+-                          {categories.find(c => c.id === product.category)?.name}
+-                          {product.subcategory && ` / ${categories.find(c => c.id === product.category)?.subcategories?.find(s => s.id === product.subcategory)?.name}`}
++                        {/* Info */}
++                        <div className="p-5 flex-1">
++                          <div className="text-xs text-door-medium uppercase tracking-wider mb-1 line-clamp-1">
++                            {categories.find(c => c.id === product.category)?.name}
++                            {product.subcategory && ` / ${categories.find(c => c.id === product.category)?.subcategories?.find(s => s.id === product.subcategory)?.name}`}
++                          </div>
++                          <h3 className="font-display font-bold text-lg text-door-black mb-2 line-clamp-2">{product.name}</h3>
++                          {product.description && viewMode === 'list' && <p className="text-sm text-gray-500 mb-4 line-clamp-2">{product.description}</p>}
+                         </div>
+-                        <h3 className="font-display font-bold text-lg text-door-black mb-2">{product.name}</h3>
+-                        {product.description && viewMode === 'list' && <p className="text-sm text-gray-500 mb-4">{product.description}</p>}
+                       </div>
++                    ))}
++                  </div>
++
++                  {/* Load More Button */}
++                  {hasMore && (
++                    <div className="mt-12 flex justify-center">
++                      <button
++                        onClick={handleLoadMore}
++                        className="flex items-center gap-2 px-8 py-3 bg-door-light text-door-black hover:bg-gray-200 transition-colors rounded-full font-medium"
++                      >
++                        ╨Я╨╛╨║╨░╨╖╨░╤В╤М ╨╡╤Й╨╡
++                        <ChevronDown className="w-4 h-4" />
++                      </button>
+                     </div>
+-                  ))}
+-                </div>
++                  )}
++                </>
+               ) : (
+                 <div className="py-20 text-center">
+                   <p className="text-xl text-gray-400">╨Т ╤Н╤В╨╛╨╣ ╨║╨░╤В╨╡╨│╨╛╤А╨╕╨╕ ╨┐╨╛╨║╨░ ╨╜╨╡╤В ╤В╨╛╨▓╨░╤А╨╛╨▓</p>
+@@ -964,7 +338,7 @@ const CategoryPage = () => {
+       </section>
+ 
+       {/* Footer */}
+-      <footer className="bg-door-black text-white py-12 border-t border-white/10">
++      <footer className="bg-door-black text-white py-12 border-t border-white/10 mt-auto">
+         <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 text-center md:text-left">
+           <div className="flex flex-col md:flex-row justify-between items-center">
+             <div className="flex items-center gap-2 mb-4 md:mb-0">

@@ -1,0 +1,98 @@
+﻿
+category_diff_full.txt:4:+++ b/app/src/pages/CategoryPage.tsx
+category_diff_full.txt:8:+import { useEffect, useRef, useState, useMemo } from 'react';
+category_diff_full.txt:9:+import { Grid3X3, LayoutList, ChevronDown } from 'lucide-react';
+category_diff_full.txt:677:+import { products } from '../data/products';
+category_diff_full.txt:678:+import { categories } from '../data/categories';
+category_diff_full.txt:679:+
+category_diff_full.txt:680:+const ITEMS_PER_PAGE = 12;
+category_diff_full.txt:688:+  // Pagination State
+category_diff_full.txt:689:+  const [visibleCount, setVisibleCount] = useState<number>(ITEMS_PER_PAGE);
+category_diff_full.txt:690:+
+category_diff_full.txt:694:+  // Reset pagination when category or filters change
+category_diff_full.txt:695:+  useEffect(() => {
+category_diff_full.txt:696:+    setVisibleCount(ITEMS_PER_PAGE);
+category_diff_full.txt:697:+  }, [activeCategory, activeSubCategory, selectedBrands, selectedColors, sortBy]);
+category_diff_full.txt:698:+
+category_diff_full.txt:708:+  const availableBrands = useMemo(() => Array.from(new Set(products.filter(p => p.category 
+=== activeCategory).map(p => p.brand))), [activeCategory]);
+category_diff_full.txt:709:+  const availableColors = useMemo(() => Array.from(new Set(products.filter(p => p.category 
+=== activeCategory).flatMap(p => p.colors))), [activeCategory]);
+category_diff_full.txt:712:+  const filteredProducts = useMemo(() => products.filter(p => {
+category_diff_full.txt:719:+  }), [activeCategory, activeSubCategory, selectedBrands, selectedColors]);
+category_diff_full.txt:722:+  const sortedProducts = useMemo(() => [...filteredProducts].sort((a, b) => {
+category_diff_full.txt:726:+      default: return 0; // Or define a 'popular' sorting logic
+category_diff_full.txt:729:+  }), [filteredProducts, sortBy]);
+category_diff_full.txt:730:+
+category_diff_full.txt:731:+  const visibleProducts = sortedProducts.slice(0, visibleCount);
+category_diff_full.txt:732:+  const hasMore = visibleCount < sortedProducts.length;
+category_diff_full.txt:733:+
+category_diff_full.txt:734:+  const handleLoadMore = () => {
+category_diff_full.txt:735:+    setVisibleCount(prev => prev + ITEMS_PER_PAGE);
+category_diff_full.txt:736:+  };
+category_diff_full.txt:745:+            <div className="flex-1 flex flex-col">
+category_diff_full.txt:779:+                <>
+category_diff_full.txt:780:+                  <div className={`grid gap-6 ${viewMode === 'grid'
+category_diff_full.txt:781:+                    ? 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-3'
+category_diff_full.txt:782:+                    : 'grid-cols-1'
+category_diff_full.txt:783:+                    }`}>
+category_diff_full.txt:784:+                    {visibleProducts.map((product) => (
+category_diff_full.txt:785:+                      <div
+category_diff_full.txt:786:+                        key={product.id}
+category_diff_full.txt:787:+                        className={`group relative bg-door-light rounded-2xl overflow-hidde
+n transition-all duration-300 hover:shadow-lg ${viewMode === 'list' ? 'flex gap-6 items-center' : ''
+category_diff_full.txt:788:+                          }`}
+category_diff_full.txt:789:+                        onMouseEnter={() => setHoveredProduct(product.id)}
+category_diff_full.txt:790:+                        onMouseLeave={() => setHoveredProduct(null)}
+category_diff_full.txt:791:+                      >
+category_diff_full.txt:792:+                        {/* Image - Implemented Lazy Loading */}
+category_diff_full.txt:793:+                        <div className={`relative overflow-hidden bg-white p-6 flex items-c
+enter justify-center ${viewMode === 'list' ? 'w-48 h-48 shrink-0' : 'aspect-[4/5]'
+category_diff_full.txt:794:+                          }`}>
+category_diff_full.txt:795:+                          <img
+category_diff_full.txt:796:+                            src={product.image}
+category_diff_full.txt:797:+                            alt={product.name}
+category_diff_full.txt:798:+                            loading="lazy"
+category_diff_full.txt:799:+                            className={`max-w-full max-h-full object-contain transition-all
+ duration-700 ${hoveredProduct === product.id ? 'scale-110' : 'scale-100'
+category_diff_full.txt:800:+                              }`}
+category_diff_full.txt:801:+                          />
+category_diff_full.txt:802:+
+category_diff_full.txt:803:+                          {/* Badges */}
+category_diff_full.txt:804:+                          <div className="absolute top-3 left-3 flex flex-col gap-2">
+category_diff_full.txt:805:+                            {product.isNew && <span className="px-2 py-1 bg-door-accent tex
+t-white text-[10px] font-bold uppercase rounded">New</span>}
+category_diff_full.txt:806:+                            {product.isBestseller && <span className="px-2 py-1 bg-door-bla
+ck text-white text-[10px] font-bold uppercase rounded">Hit</span>}
+category_diff_full.txt:807:+                          </div>
+category_diff_full.txt:816:+                        {/* Info */}
+category_diff_full.txt:817:+                        <div className="p-5 flex-1">
+category_diff_full.txt:818:+                          <div className="text-xs text-door-medium uppercase tracking-wider
+ mb-1 line-clamp-1">
+category_diff_full.txt:819:+                            {categories.find(c => c.id === product.category)?.name}
+category_diff_full.txt:820:+                            {product.subcategory && ` / ${categories.find(c => c.id === pro
+duct.category)?.subcategories?.find(s => s.id === product.subcategory)?.name}`}
+category_diff_full.txt:821:+                          </div>
+category_diff_full.txt:822:+                          <h3 className="font-display font-bold text-lg text-door-black mb-
+2 line-clamp-2">{product.name}</h3>
+category_diff_full.txt:823:+                          {product.description && viewMode === 'list' && <p className="text
+-sm text-gray-500 mb-4 line-clamp-2">{product.description}</p>}
+category_diff_full.txt:828:+                    ))}
+category_diff_full.txt:829:+                  </div>
+category_diff_full.txt:830:+
+category_diff_full.txt:831:+                  {/* Load More Button */}
+category_diff_full.txt:832:+                  {hasMore && (
+category_diff_full.txt:833:+                    <div className="mt-12 flex justify-center">
+category_diff_full.txt:834:+                      <button
+category_diff_full.txt:835:+                        onClick={handleLoadMore}
+category_diff_full.txt:836:+                        className="flex items-center gap-2 px-8 py-3 bg-door-light text-doo
+r-black hover:bg-gray-200 transition-colors rounded-full font-medium"
+category_diff_full.txt:837:+                      >
+category_diff_full.txt:838:+                        ╨Я╨╛╨║╨░╨╖╨░╤В╤М ╨╡╤Й╨╡
+category_diff_full.txt:839:+                        <ChevronDown className="w-4 h-4" />
+category_diff_full.txt:840:+                      </button>
+category_diff_full.txt:844:+                  )}
+category_diff_full.txt:845:+                </>
+category_diff_full.txt:854:+      <footer className="bg-door-black text-white py-12 border-t border-white/10 mt-auto">
+
+
