@@ -10,7 +10,7 @@ const bestsellers = [
     id: 1,
     name: 'Ручка Apollo CY-03S',
     category: 'APOLLO',
-    image: '/images/products/РУЧКИ/APOLLO/ХРОМ APOLLO/IMG_1661.JPG',
+    image: '/images/products/РУЧКИ/APOLLO/ЗОЛОТО apollo/IMG_0211.JPG',
     badge: 'Бестселлер',
     badgeColor: 'bg-door-accent',
     rating: 4.9,
