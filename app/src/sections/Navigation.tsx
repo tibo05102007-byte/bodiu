@@ -113,13 +113,18 @@ const Navigation = () => {
       return;
     }
     
-    // Small delay to ensure DOM is ready
-    setTimeout(() => {
-      const element = document.querySelector(href);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 50);
+    if (href === '#contact') {
+      // Для контактов скроллим в самый низ страницы
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    } else {
+      // Small delay to ensure DOM is ready
+      setTimeout(() => {
+        const element = document.querySelector(href);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 50);
+    }
     setIsMobileMenuOpen(false);
   };
 

@@ -18,13 +18,18 @@ function HomePage() {
   // Handle hash scroll on page load
   useEffect(() => {
     const hash = window.location.hash;
-    if (hash) {
+    if (hash === '#contact') {
+      // Для контактов скроллим в самый низ
+      setTimeout(() => {
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      }, 500);
+    } else if (hash) {
       setTimeout(() => {
         const element = document.querySelector(hash);
         if (element) {
           element.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
-      }, 500); // Wait for page to fully render
+      }, 500);
     }
   }, []);
 
