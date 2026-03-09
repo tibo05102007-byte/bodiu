@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { ArrowRight, Play } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
@@ -93,12 +93,6 @@ const Hero = () => {
               >
                 Исследовать коллекцию
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-              </button>
-              <button className="group inline-flex items-center gap-3 px-6 py-4 bg-white text-door-black font-medium rounded-full hover:bg-door-light transition-all duration-300 shadow-soft">
-                <span className="w-10 h-10 bg-door-black rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <Play className="w-4 h-4 text-white ml-0.5" fill="white" />
-                </span>
-                Смотреть историю
               </button>
             </div>
 

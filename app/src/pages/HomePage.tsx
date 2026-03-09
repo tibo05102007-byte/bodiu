@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -14,6 +15,19 @@ import Footer from '../sections/Footer';
 gsap.registerPlugin(ScrollTrigger);
 
 function HomePage() {
+  // Handle hash scroll on page load
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      setTimeout(() => {
+        const element = document.querySelector(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 500); // Wait for page to fully render
+    }
+  }, []);
+
   return (
     <div className="relative min-h-screen">
       <Navigation />

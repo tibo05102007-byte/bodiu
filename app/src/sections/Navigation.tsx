@@ -113,10 +113,13 @@ const Navigation = () => {
       return;
     }
     
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    // Small delay to ensure DOM is ready
+    setTimeout(() => {
+      const element = document.querySelector(href);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 50);
     setIsMobileMenuOpen(false);
   };
 
