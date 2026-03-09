@@ -65,11 +65,11 @@ const Hero = () => {
         />
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-12 xl:px-20 relative z-20">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-12 xl:px-20 relative z-20 pt-8 lg:pt-0">
         <div className="grid lg:grid-cols-12 gap-12 items-center h-full">
 
           {/* Content (Left 60%) */}
-          <div className="lg:col-span-7 pt-20 lg:pt-0">
+          <div className="lg:col-span-7 pt-[55vh] lg:pt-0">
             <div className="mb-8">
               <span className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full text-sm font-medium text-door-dark shadow-soft">
                 <span className="w-2 h-2 bg-door-success rounded-full animate-pulse" />
@@ -77,12 +77,12 @@ const Hero = () => {
               </span>
             </div>
 
-            <h1 ref={headlineRef} className="font-display text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold text-door-black leading-[0.95] tracking-tight mb-8">
+            <h1 ref={headlineRef} className="font-display text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold text-door-black leading-[1.1] sm:leading-[0.95] tracking-tight mb-8">
               Искусство <br />
               <span className="italic font-serif text-door-dark/80">Входа</span>
             </h1>
 
-            <p ref={descriptionRef} className="text-xl text-door-dark max-w-lg leading-relaxed mb-10">
+            <p ref={descriptionRef} className="text-lg sm:text-xl text-door-dark max-w-lg leading-relaxed mb-10">
               Точно инженерная дверная фурнитура, которая превращает пространства в незабываемые впечатления. Откройте для себя нашу коллекцию ручек ручной работы, где каждая деталь имеет значение.
             </p>
 
