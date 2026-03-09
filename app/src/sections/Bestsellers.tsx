@@ -1,5 +1,5 @@
-import { useRef } from 'react';
-import { ArrowRight, Eye, MessageCircle } from 'lucide-react';
+import { useRef, useState, useEffect } from 'react';
+import { ArrowRight, Eye, MessageCircle, X } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { Link } from 'react-router-dom';
@@ -88,9 +88,64 @@ const bestsellers = [
   },
 ];
 
+// Lightbox компонент
+const Lightbox = ({ 
+  image, 
+  title,
+  onClose 
+}: { 
+  image: string; 
+  title: string;
+  onClose: () => void;
+}) => {
+  // Закрытие по Escape
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  });
+
+  return (
+    <div 
+      className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center"
+      onClick={onClose}
+    >
+      {/* Close button */}
+      <button 
+        onClick={onClose}
+        className="absolute top-4 right-4 z-10 w-12 h-12 flex items-center justify-center bg-white/10 hover:bg-white/20 rounded-full transition-colors"
+      >
+        <X className="w-6 h-6 text-white" />
+      </button>
+
+      {/* Image */}
+      <div 
+        className="max-w-[90vw] max-h-[90vh]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <img 
+          src={image} 
+          alt={title}
+          className="max-w-full max-h-[85vh] object-contain rounded-lg"
+        />
+        <p className="text-center mt-4 text-white/80 text-lg">{title}</p>
+      </div>
+    </div>
+  );
+};
+
 const Bestsellers = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string>('');
+  const [selectedTitle, setSelectedTitle] = useState<string>('');
 
   useGSAP(() => {
     // Анимация появления карточек
@@ -163,14 +218,16 @@ const Bestsellers = () => {
 
                 {/* Hover Actions */}
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
-                  <a
-                    href={product.image}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <button
+                    onClick={() => {
+                      setSelectedImage(product.image);
+                      setSelectedTitle(product.name);
+                      setLightboxOpen(true);
+                    }}
                     className="w-12 h-12 bg-white rounded-full flex items-center justify-center hover:bg-door-accent hover:text-white transition-colors transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300"
                   >
                     <Eye className="w-5 h-5" />
-                  </a>
+                  </button>
                 </div>
               </div>
 
@@ -223,6 +280,15 @@ const Bestsellers = () => {
           </Link>
         </div>
       </div>
+
+      {/* Lightbox */}
+      {lightboxOpen && (
+        <Lightbox
+          image={selectedImage}
+          title={selectedTitle}
+          onClose={() => setLightboxOpen(false)}
+        />
+      )}
     </section>
   );
 };
