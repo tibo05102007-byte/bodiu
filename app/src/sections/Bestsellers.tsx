@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { ArrowRight, ShoppingCart, Eye, MessageCircle } from 'lucide-react';
+import { ArrowRight, Eye, MessageCircle } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { Link } from 'react-router-dom';
@@ -163,12 +163,14 @@ const Bestsellers = () => {
 
                 {/* Hover Actions */}
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
-                  <button className="w-12 h-12 bg-white rounded-full flex items-center justify-center hover:bg-door-accent hover:text-white transition-colors transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                  <a
+                    href={product.image}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-12 h-12 bg-white rounded-full flex items-center justify-center hover:bg-door-accent hover:text-white transition-colors transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300"
+                  >
                     <Eye className="w-5 h-5" />
-                  </button>
-                  <button className="w-12 h-12 bg-white rounded-full flex items-center justify-center hover:bg-door-accent hover:text-white transition-colors transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">
-                    <ShoppingCart className="w-5 h-5" />
-                  </button>
+                  </a>
                 </div>
               </div>
 

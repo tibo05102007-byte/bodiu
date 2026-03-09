@@ -2,7 +2,6 @@ import { useRef } from 'react';
 import { ArrowRight, Play } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
-import LiquidDistortion from '../components/LiquidDistortion';
 
 const Hero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -130,13 +129,12 @@ const Hero = () => {
         }}
       >
         <div className="w-full h-full relative">
-          {/* Fallback Image */}
-          <img src="/images/hero-handle.jpg" alt="Hero" className="absolute inset-0 w-full h-full object-cover -z-10" />
-
-          {/* WebGL Overlay */}
-          <div className="absolute inset-0 w-full h-full hidden lg:block">
-            <LiquidDistortion imageSrc="/images/hero-handle.jpg" />
-          </div>
+          {/* Hero Image */}
+          <img 
+            src="/images/hero-handle.jpg" 
+            alt="Hero" 
+            className="absolute inset-0 w-full h-full object-cover" 
+          />
         </div>
       </div>
 
