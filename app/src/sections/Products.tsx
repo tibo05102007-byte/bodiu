@@ -131,6 +131,19 @@ const Products = () => {
                         (e.target as HTMLImageElement).src = '/images/products/catalog-hero.jpg';
                       }}
                     />
+                    {/* Бейджи */}
+                    <div className="absolute top-4 left-4 flex flex-col gap-2">
+                      {cat.totalImages > 500 && (
+                        <span className="px-3 py-1 bg-door-accent text-white text-xs font-bold uppercase rounded-full shadow-lg">
+                          Хит
+                        </span>
+                      )}
+                      {cat.name.includes('Электронные') && (
+                        <span className="px-3 py-1 bg-green-500 text-white text-xs font-bold uppercase rounded-full shadow-lg">
+                          Новинка
+                        </span>
+                      )}
+                    </div>
                     {/* Overlay с количеством фото */}
                     <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium text-door-dark">
                       {cat.totalImages} фото
@@ -147,8 +160,13 @@ const Products = () => {
                     </div>
                     <p className="text-sm text-door-medium line-clamp-2">{cat.count}</p>
 
-                    <div className="absolute bottom-6 right-6 w-10 h-10 bg-door-light rounded-full flex items-center justify-center transform translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300">
-                      <ArrowRight className="w-5 h-5 text-door-black" />
+                    <div className="absolute bottom-6 right-6 flex items-center gap-2 transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                      <span className="px-4 py-2 bg-door-black text-white text-sm font-medium rounded-full">
+                        Смотреть
+                      </span>
+                      <div className="w-10 h-10 bg-door-accent rounded-full flex items-center justify-center">
+                        <ArrowRight className="w-5 h-5 text-white" />
+                      </div>
                     </div>
                   </div>
                 </div>

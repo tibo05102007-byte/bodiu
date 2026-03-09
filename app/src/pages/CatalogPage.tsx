@@ -1,12 +1,8 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Grid3X3, LayoutList, ZoomIn, X, ChevronLeft, ChevronRight } from 'lucide-react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ArrowLeft, Grid3X3, LayoutList, ZoomIn, X, ChevronLeft, ChevronRight, MessageCircle } from 'lucide-react';
 import catalogData from '@/data/products-catalog.json';
 import ApolloLogo from '@/components/ApolloLogo';
-
-gsap.registerPlugin(ScrollTrigger);
 
 // Типы
 interface GalleryImage {
@@ -15,7 +11,7 @@ interface GalleryImage {
   index: number;
 }
 
-// Компонент Lightbox для просмотра фото
+// Lightbox компонент
 const Lightbox = ({ 
   images, 
   currentIndex, 
@@ -47,7 +43,6 @@ const Lightbox = ({
 
   return (
     <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center">
-      {/* Close button */}
       <button 
         onClick={onClose}
         className="absolute top-4 right-4 z-10 w-12 h-12 flex items-center justify-center bg-white/10 hover:bg-white/20 rounded-full transition-colors"
@@ -55,7 +50,6 @@ const Lightbox = ({
         <X className="w-6 h-6 text-white" />
       </button>
 
-      {/* Prev button */}
       {images.length > 1 && (
         <button 
           onClick={onPrev}
@@ -65,7 +59,6 @@ const Lightbox = ({
         </button>
       )}
 
-      {/* Image */}
       <div className="max-w-[90vw] max-h-[85vh]">
         <img 
           src={currentImage?.src} 
@@ -77,7 +70,6 @@ const Lightbox = ({
         </div>
       </div>
 
-      {/* Next button */}
       {images.length > 1 && (
         <button 
           onClick={onNext}
@@ -110,17 +102,12 @@ const ImageGallery = ({ images, categoryName }: { images: string[]; categoryName
     setLightboxOpen(true);
   };
 
-  const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % images.length);
-  };
-
-  const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
-  };
+  const nextImage = () => setCurrentImageIndex((prev) => (prev + 1) % images.length);
+  const prevImage = () => setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
 
   if (images.length === 0) {
     return (
-      <div className="text-center py-20">
+      <div className="text-center py-20 bg-white rounded-2xl">
         <p className="text-gray-500 text-lg">В этой категории пока нет фотографий</p>
       </div>
     );
@@ -128,7 +115,6 @@ const ImageGallery = ({ images, categoryName }: { images: string[]; categoryName
 
   return (
     <>
-      {/* Controls */}
       <div className="flex justify-between items-center mb-6">
         <span className="text-door-medium">
           Всего фотографий: <strong>{images.length}</strong>
@@ -151,7 +137,6 @@ const ImageGallery = ({ images, categoryName }: { images: string[]; categoryName
         </div>
       </div>
 
-      {/* Grid */}
       <div className={`grid gap-4 ${
         viewMode === 'grid' 
           ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5' 
@@ -177,7 +162,6 @@ const ImageGallery = ({ images, categoryName }: { images: string[]; categoryName
                   (e.target as HTMLImageElement).src = '/images/products/catalog-hero.jpg';
                 }}
               />
-              {/* Hover overlay */}
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
                 <ZoomIn className="w-8 h-8 text-white" />
               </div>
@@ -192,7 +176,6 @@ const ImageGallery = ({ images, categoryName }: { images: string[]; categoryName
         ))}
       </div>
 
-      {/* Lightbox */}
       {lightboxOpen && (
         <Lightbox
           images={galleryImages}
@@ -206,60 +189,48 @@ const ImageGallery = ({ images, categoryName }: { images: string[]; categoryName
   );
 };
 
-// Главная страница каталога со всеми категориями
-const CatalogOverview = ({ onSelectCategory }: { onSelectCategory: (id: string) => void }) => {
+// Фильтр по цветам
+const ColorFilter = ({ 
+  colors, 
+  activeColor, 
+  onSelect 
+}: { 
+  colors: any[]; 
+  activeColor: string | null; 
+  onSelect: (id: string | null) => void;
+}) => {
+  if (!colors || colors.length === 0) return null;
+
   return (
-    <div className="py-12">
-      <div className="mb-8">
-        <h1 className="font-display text-4xl font-bold text-door-black mb-4">
-          Каталог продукции
-        </h1>
-        <p className="text-door-medium text-lg">
-          {catalogData.totalCategories} категорий • {catalogData.totalImages} фотографий
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {catalogData.categories.map((cat) => (
+    <div className="mb-6">
+      <h3 className="font-medium text-door-black mb-3">Фильтр по цвету:</h3>
+      <div className="flex flex-wrap gap-2">
+        <button
+          onClick={() => onSelect(null)}
+          className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+            activeColor === null
+              ? 'bg-door-black text-white'
+              : 'bg-gray-100 text-door-dark hover:bg-gray-200'
+          }`}
+        >
+          Все цвета
+        </button>
+        {colors.map((color) => (
           <button
-            key={cat.id}
-            onClick={() => onSelectCategory(cat.id)}
-            className="group relative bg-white rounded-2xl overflow-hidden shadow-soft hover:shadow-elevated transition-all duration-300 hover:-translate-y-1 text-left"
+            key={color.id}
+            onClick={() => onSelect(color.id)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              activeColor === color.id
+                ? 'bg-door-black text-white'
+                : 'bg-gray-100 text-door-dark hover:bg-gray-200'
+            }`}
           >
-            {/* Image */}
-            <div className="aspect-[4/3] relative overflow-hidden bg-gray-50">
-              {cat.previewImage ? (
-                <img
-                  src={cat.previewImage}
-                  alt={cat.name}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = '/images/products/catalog-hero.jpg';
-                  }}
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
-                  <span className="text-6xl">{cat.icon}</span>
-                </div>
-              )}
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-              {/* Count badge */}
-              <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium">
-                {cat.totalImages} фото
-              </div>
-            </div>
-
-            {/* Content */}
-            <div className="p-5">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-xl">{cat.icon}</span>
-                <h3 className="font-display font-bold text-xl text-door-black group-hover:text-door-accent transition-colors">
-                  {cat.name}
-                </h3>
-              </div>
-              <p className="text-sm text-door-medium line-clamp-2">{cat.description}</p>
-            </div>
+            <span 
+              className="w-4 h-4 rounded-full border border-gray-300"
+              style={{ backgroundColor: color.color }}
+            />
+            {color.name}
+            <span className="text-xs opacity-70">({color.count})</span>
           </button>
         ))}
       </div>
@@ -276,11 +247,18 @@ const CategoryDetail = ({
   onBack: () => void;
 }) => {
   const [activeSubcategory, setActiveSubcategory] = useState<string | null>(null);
+  const [activeColor, setActiveColor] = useState<string | null>(null);
 
   const category = useMemo(() => 
     catalogData.categories.find(c => c.id === categoryId),
     [categoryId]
   );
+
+  // Сбрасываем фильтры при смене категории
+  useEffect(() => {
+    setActiveSubcategory(null);
+    setActiveColor(null);
+  }, [categoryId]);
 
   if (!category) {
     return (
@@ -293,14 +271,46 @@ const CategoryDetail = ({
     );
   }
 
+  // Получаем активную подкатегорию
+  const activeSub = useMemo(() => {
+    if (!activeSubcategory) return null;
+    return category.subcategories.find(s => s.id === activeSubcategory);
+  }, [category, activeSubcategory]);
+
   // Получаем изображения для отображения
   const displayImages = useMemo(() => {
+    let images: string[] = [];
+    
     if (activeSubcategory) {
-      const sub = category.subcategories.find(s => s.id === activeSubcategory);
-      return sub?.images || [];
+      // Если выбрана подкатегория (APOLLO, Status и т.д.)
+      images = activeSub?.images || [];
+      
+      // Если выбран цвет внутри подкатегории
+      if (activeColor && activeSub?.colors) {
+        const colorData = activeSub.colors.find((c: any) => c.id === activeColor);
+        images = colorData?.images || [];
+      }
+    } else {
+      // Все изображения категории
+      images = category.allImages;
     }
-    return category.allImages;
-  }, [category, activeSubcategory]);
+    
+    return images;
+  }, [category, activeSubcategory, activeSub, activeColor]);
+
+  // Получаем доступные цвета для текущей подкатегории
+  const availableColors = useMemo(() => {
+    if (activeSub?.colors && activeSub.colors.length > 0) {
+      return activeSub.colors;
+    }
+    return [];
+  }, [activeSub]);
+
+  // Обработчик выбора подкатегории
+  const handleSubcategorySelect = (subId: string | null) => {
+    setActiveSubcategory(subId);
+    setActiveColor(null); // Сбрасываем цвет при смене подкатегории
+  };
 
   return (
     <div className="py-8">
@@ -326,13 +336,13 @@ const CategoryDetail = ({
         </div>
       </div>
 
-      {/* Subcategories filter */}
+      {/* Subcategories filter (Бренды) */}
       {category.hasSubcategories && category.subcategories.length > 0 && (
-        <div className="mb-8">
-          <h3 className="font-medium text-door-black mb-3">Подкатегории:</h3>
+        <div className="mb-6">
+          <h3 className="font-medium text-door-black mb-3">Бренды:</h3>
           <div className="flex flex-wrap gap-2">
             <button
-              onClick={() => setActiveSubcategory(null)}
+              onClick={() => handleSubcategorySelect(null)}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                 activeSubcategory === null
                   ? 'bg-door-black text-white'
@@ -344,7 +354,7 @@ const CategoryDetail = ({
             {category.subcategories.map((sub) => (
               <button
                 key={sub.id}
-                onClick={() => setActiveSubcategory(sub.id)}
+                onClick={() => handleSubcategorySelect(sub.id)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                   activeSubcategory === sub.id
                     ? 'bg-door-black text-white'
@@ -358,11 +368,105 @@ const CategoryDetail = ({
         </div>
       )}
 
+      {/* Color filter (только если есть цвета) */}
+      {availableColors.length > 0 && (
+        <ColorFilter 
+          colors={availableColors}
+          activeColor={activeColor}
+          onSelect={setActiveColor}
+        />
+      )}
+
+      {/* Order CTA */}
+      <div className="mb-8 p-6 bg-gradient-to-r from-door-accent/10 to-door-black/5 rounded-2xl border border-door-accent/20">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <h3 className="font-display font-bold text-xl text-door-black mb-1">
+              Нужна помощь с выбором?
+            </h3>
+            <p className="text-door-medium">
+              Напишите нам — поможем подобрать идеальную фурнитуру для вашего проекта
+            </p>
+          </div>
+          <a
+            href="https://wa.me/77074209510"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-green-500 text-white rounded-full font-medium hover:bg-green-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+          >
+            <MessageCircle className="w-5 h-5" />
+            Написать в WhatsApp
+          </a>
+        </div>
+      </div>
+
       {/* Gallery */}
       <ImageGallery 
         images={displayImages} 
-        categoryName={category.name}
+        categoryName={activeSub?.displayName || category.name}
       />
+    </div>
+  );
+};
+
+// Главная страница каталога
+const CatalogOverview = ({ onSelectCategory }: { onSelectCategory: (id: string) => void }) => {
+  return (
+    <div className="py-12">
+      <div className="mb-8">
+        <h1 className="font-display text-4xl font-bold text-door-black mb-4">
+          Каталог продукции
+        </h1>
+        <p className="text-door-medium text-lg">
+          {catalogData.totalCategories} категорий • {catalogData.totalImages} фотографий
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {catalogData.categories.map((cat) => (
+          <button
+            key={cat.id}
+            onClick={() => onSelectCategory(cat.id)}
+            className="group relative bg-white rounded-2xl overflow-hidden shadow-soft hover:shadow-elevated transition-all duration-300 hover:-translate-y-1 text-left"
+          >
+            <div className="aspect-[4/3] relative overflow-hidden bg-gray-50">
+              {cat.previewImage ? (
+                <img
+                  src={cat.previewImage}
+                  alt={cat.name}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/images/products/catalog-hero.jpg';
+                  }}
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+                  <span className="text-6xl">{cat.icon}</span>
+                </div>
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium">
+                {cat.totalImages} фото
+              </div>
+            </div>
+
+            <div className="p-5">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-xl">{cat.icon}</span>
+                <h3 className="font-display font-bold text-xl text-door-black group-hover:text-door-accent transition-colors">
+                  {cat.name}
+                </h3>
+              </div>
+              <p className="text-sm text-door-medium line-clamp-2">{cat.description}</p>
+              {cat.hasColorFilters && (
+                <p className="text-xs text-door-accent mt-2">
+                  {cat.colorFilters.length} цветов
+                </p>
+              )}
+            </div>
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
@@ -371,15 +475,6 @@ const CategoryDetail = ({
 const CatalogPage = () => {
   const { categoryId } = useParams<{ categoryId?: string }>();
   const navigate = useNavigate();
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(categoryId || null);
-
-  useEffect(() => {
-    if (categoryId) {
-      setSelectedCategory(categoryId);
-    } else {
-      setSelectedCategory(null);
-    }
-  }, [categoryId]);
 
   const handleSelectCategory = (id: string) => {
     navigate(`/catalog/${id}`);
@@ -399,18 +494,10 @@ const CatalogPage = () => {
               <ApolloLogo className="h-8 w-auto text-door-black hover:text-door-accent transition-colors" />
             </Link>
             <nav className="hidden md:flex items-center gap-8">
-              <Link to="/" className="text-sm font-medium text-door-dark hover:text-door-black">
-                Главная
-              </Link>
-              <Link to="/catalog" className="text-sm font-medium text-door-black">
-                Каталог
-              </Link>
-              <Link to="/#about" className="text-sm font-medium text-door-dark hover:text-door-black">
-                Наша история
-              </Link>
-              <Link to="/#contact" className="text-sm font-medium text-door-dark hover:text-door-black">
-                Контакты
-              </Link>
+              <Link to="/" className="text-sm font-medium text-door-dark hover:text-door-black">Главная</Link>
+              <Link to="/catalog" className="text-sm font-medium text-door-black">Каталог</Link>
+              <Link to="/#about" className="text-sm font-medium text-door-dark hover:text-door-black">Наша история</Link>
+              <Link to="/#contact" className="text-sm font-medium text-door-dark hover:text-door-black">Контакты</Link>
             </nav>
           </div>
         </div>
@@ -418,9 +505,9 @@ const CatalogPage = () => {
 
       {/* Main Content */}
       <main className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 min-h-[calc(100vh-200px)]">
-        {selectedCategory ? (
+        {categoryId ? (
           <CategoryDetail 
-            categoryId={selectedCategory} 
+            categoryId={categoryId} 
             onBack={handleBack}
           />
         ) : (
@@ -429,7 +516,7 @@ const CatalogPage = () => {
       </main>
 
       {/* Footer */}
-      <footer className="bg-door-black text-white py-12 border-t border-white/10 mt-auto">
+      <footer id="contact" className="bg-door-black text-white py-12 border-t border-white/10 mt-auto">
         <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 text-center md:text-left">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center gap-2 mb-4 md:mb-0">

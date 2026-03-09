@@ -12,6 +12,7 @@ const reviews = [
     role: 'Дизайнер интерьера, Алматы',
     text: 'Фурнитура от DoorHandles изменила мой взгляд на детали. Это не просто ручки, это ювелирные украшения для дома. Клиенты в восторге от качества.',
     rating: 5,
+    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=face',
   },
   {
     id: 2,
@@ -19,6 +20,7 @@ const reviews = [
     role: 'Архитектор, Астана',
     text: 'Использую их продукцию в премиальных проектах. Надежность механизмов и эстетика на высоте. Отличный сервис и быстрая доставка.',
     rating: 5,
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
   },
   {
     id: 3,
@@ -26,6 +28,7 @@ const reviews = [
     role: 'Владелица салона, Шымкент',
     text: 'Очень довольна сотрудничеством. Ассортимент позволяет закрыть любые потребности клиентов, от классики до хай-тека.',
     rating: 5,
+    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
   },
   {
     id: 4,
@@ -33,6 +36,7 @@ const reviews = [
     role: 'Застройщик',
     text: 'Для нашего нового ЖК бизнес-класса выбрали серию Black Edition. Идеальное соотношение цены и качества.',
     rating: 5,
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face',
   },
   {
     id: 5,
@@ -40,6 +44,7 @@ const reviews = [
     role: 'Частный клиент',
     text: 'Ручки просто невероятные! Тактильно приятные, тяжелые, чувствуется качество. Спасибо за помощь в подборе.',
     rating: 5,
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=face',
   },
 ];
 
@@ -107,7 +112,17 @@ const Reviews = () => {
                 </div>
                 <p className="text-lg text-gray-300 italic mb-6 leading-relaxed">"{review.text}"</p>
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-door-accent to-door-dark flex items-center justify-center text-white font-bold">
+                  <img 
+                    src={review.avatar} 
+                    alt={review.name}
+                    className="w-12 h-12 rounded-full object-cover border-2 border-door-accent"
+                    onError={(e) => {
+                      // Fallback на инициалы если фото не загрузилось
+                      (e.target as HTMLImageElement).style.display = 'none';
+                      (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
+                    }}
+                  />
+                  <div className="hidden w-12 h-12 rounded-full bg-gradient-to-br from-door-accent to-door-dark flex items-center justify-center text-white font-bold text-lg">
                     {review.name.charAt(0)}
                   </div>
                   <div>

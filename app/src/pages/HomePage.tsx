@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Navigation from '../sections/Navigation';
 import Hero from '../sections/Hero';
 import Products from '../sections/Products';
+import Bestsellers from '../sections/Bestsellers';
 import About from '../sections/About';
 import WhyUs from '../sections/WhyUs';
 import Reviews from '../sections/Reviews';
@@ -20,6 +21,7 @@ function HomePage() {
         {/* Helper helper class to adjust margin bottom dynamically via JS in Footer or manually set approximate height */}
         <Hero />
         <Products />
+        <Bestsellers />
         <About />
         <WhyUs />
         <Reviews />

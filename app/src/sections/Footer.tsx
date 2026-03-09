@@ -4,9 +4,7 @@ import {
   Phone,
   MapPin,
   Instagram,
-  Facebook,
-  Twitter,
-  Linkedin,
+  MessageCircle,
   ArrowRight,
   Check,
 } from 'lucide-react';
@@ -76,10 +74,16 @@ const Footer = () => {
 
 
   const socialLinks = [
-    { icon: Instagram, href: '#', label: 'Instagram' },
-    { icon: Facebook, href: '#', label: 'Facebook' },
-    { icon: Twitter, href: '#', label: 'Twitter' },
-    { icon: Linkedin, href: '#', label: 'LinkedIn' },
+    { icon: Instagram, href: 'https://instagram.com/apollo_handle', label: 'Instagram' },
+    { 
+      icon: () => (
+        <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+          <path d="M15.684 0H8.316C1.592 0 0 1.592 0 8.316v7.368C0 22.408 1.592 24 8.316 24h7.368C22.408 24 24 22.408 24 15.684V8.316C24 1.592 22.408 0 15.684 0zm3.692 17.123h-1.744c-.66 0-.864-.525-2.05-1.727-1.033-1-1.49-1.135-1.744-1.135-.356 0-.458.102-.458.593v1.575c0 .424-.135.678-1.253.678-1.846 0-3.896-1.12-5.339-3.202C4.624 10.857 4 8.673 4 8.2c0-.254.102-.491.593-.491h1.744c.44 0 .61.203.779.677.863 2.49 2.303 4.675 2.896 4.675.22 0 .322-.102.322-.66V9.721c-.068-1.186-.695-1.287-.695-1.71 0-.203.17-.407.44-.407h2.744c.373 0 .508.203.508.643v3.473c0 .372.17.508.271.508.22 0 .407-.136.813-.542 1.254-1.406 2.151-3.574 2.151-3.574.119-.254.322-.491.763-.491h1.744c.525 0 .644.27.525.643-.22 1.017-2.354 4.031-2.354 4.031-.186.305-.254.44 0 .78.186.254.796.779 1.203 1.253.745.847 1.32 1.558 1.473 2.05.17.49-.085.744-.576.744z"/>
+        </svg>
+      ), 
+      href: 'https://vk.link/apollo_handle', 
+      label: 'VKontakte' 
+    },
   ];
 
   return (
@@ -176,11 +180,11 @@ const Footer = () => {
             <ul className="space-y-4">
               <li>
                 <a
-                  href="mailto:hello@doorhandles.com"
+                  href="mailto:narmetov.r41@gmail.com"
                   className="flex items-center gap-3 text-white/60 hover:text-white transition-colors duration-300 text-sm md:justify-end"
                 >
                   <Mail className="w-4 h-4 text-door-accent order-first md:order-last" />
-                  hello@doorhandles.com
+                  narmetov.r41@gmail.com
                 </a>
               </li>
               <li>
@@ -190,6 +194,17 @@ const Footer = () => {
                 >
                   <Phone className="w-4 h-4 text-door-accent order-first md:order-last" />
                   +7 707 420 9510
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://wa.me/77074209510"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 text-white/60 hover:text-green-400 transition-colors duration-300 text-sm md:justify-end"
+                >
+                  <MessageCircle className="w-4 h-4 text-green-400 order-first md:order-last" />
+                  WhatsApp
                 </a>
               </li>
               <li>
@@ -205,9 +220,10 @@ const Footer = () => {
                   href="https://wa.me/77074209510"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-door-accent text-white rounded-full text-sm font-medium hover:bg-white hover:text-door-black transition-all duration-300 shadow-md md:ml-auto"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-green-500 text-white rounded-full text-sm font-medium hover:bg-white hover:text-green-600 transition-all duration-300 shadow-md md:ml-auto"
                 >
-                  Связаться с нами
+                  <MessageCircle className="w-4 h-4" />
+                  Написать в WhatsApp
                   <ArrowRight className="w-4 h-4" />
                 </a>
               </li>
