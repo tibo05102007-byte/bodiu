@@ -109,6 +109,9 @@ function shouldExclude(name) {
   return EXCLUDE_FOLDERS.some(excluded => lower.includes(excluded.toLowerCase()));
 }
 
+// Отслеживание уникальных файлов (глобально)
+const seenFilenames = new Set();
+
 // Рекурсивное сканирование
 function scanDirectory(dirPath, relativePath = '') {
   const items = fs.readdirSync(dirPath, { withFileTypes: true });
@@ -126,6 +129,20 @@ function scanDirectory(dirPath, relativePath = '') {
         result.subcategories[item.name] = subData;
       }
     } else if (/\.(jpg|jpeg|png|gif|webp)$/i.test(item.name)) {
+      // Проверяем на дубликаты по имени файла
+      const normalizedName = item.name.toLowerCase().replace(/\s+/g, '_');
+      
+      // Пропускаем если уже видели этот файл
+      if (seenFilenames.has(normalizedName)) {
+        continue;
+      }
+      
+      // Пропускаем файлы с (1), (2) и т.д. в имени — это дубликаты
+      if (/\(\d+\)\./.test(item.name)) {
+        continue;
+      }
+      
+      seenFilenames.add(normalizedName);
       result.images.push({
         filename: item.name,
         path: `/images/products/${relPath.replace(/\\/g, '/')}`,
@@ -193,6 +210,9 @@ function getColorsForBrand(brandName, subcategories) {
 
 // Генерация каталога
 function generateCatalog() {
+  // Сбрасываем отслеживание дубликатов
+  seenFilenames.clear();
+  
   console.log('🔍 Сканирование:', PRODUCTS_DIR);
 
   if (!fs.existsSync(PRODUCTS_DIR)) {
