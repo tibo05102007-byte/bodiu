@@ -17,9 +17,6 @@ const OUTPUT_FILE = path.join(__dirname, '../src/data/products-catalog.json');
 // Исключаемые папки
 const EXCLUDE_FOLDERS = ['auto', 'real', 'duplicates', 'дубликаты', 'копии', 'temp', 'tmp'];
 
-// Глобальное отслеживание уникальных файлов (по полному пути)
-const globalSeenPaths = new Set();
-
 // Цвета для Apollo
 const APOLLO_COLORS = {
   'БЕЛЫЕ APOLLO': { name: 'Белый', color: '#FFFFFF', bg: '#F5F5F5' },
@@ -67,26 +64,11 @@ const CATEGORY_NAMES = {
 function normalizeBrandName(name) {
   const upper = name.toUpperCase();
   
-  // Apollo варианты
-  if (upper.includes('APOLLO') || upper.includes('АПОЛЛО') || upper.includes('АПОЛО')) {
-    return 'Apollo';
-  }
+  if (upper.includes('APOLLO') || upper.includes('АПОЛЛО')) return 'Apollo';
+  if (upper.includes('STATUS') || upper.includes('СТАТУС')) return 'Status';
+  if (upper.includes('DIAMOND')) return 'Diamond';
   
-  // Status варианты  
-  if (upper.includes('STATUS') || upper.includes('СТАТУС')) {
-    return 'Status';
-  }
-  
-  // Diamond
-  if (upper.includes('DIAMOND') || upper.includes('ДАЙМОНД') || upper.includes('ДАЙМОНД')) {
-    return 'Diamond';
-  }
-  
-  // Для остальных - очищаем и форматируем
-  return name
-    .replace(/[_-]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
+  return name.replace(/[_-]/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
 // Транслитерация
@@ -106,63 +88,61 @@ function transliterate(str) {
   return str.split('').map(char => map[char] || char).join('');
 }
 
-// Проверка, нужно ли исключить папку
 function shouldExclude(name) {
-  const lower = name.toLowerCase();
-  return EXCLUDE_FOLDERS.some(excluded => lower.includes(excluded.toLowerCase()));
-}
-
-// Проверка на дубликат файла (по полному пути)
-function isDuplicate(relPath) {
-  // Пропускаем файлы с (1), (2) и т.д. — это дубликаты
-  if (/\(\d+\)\./.test(relPath)) {
-    return true;
-  }
-  
-  const normalized = relPath.toLowerCase().replace(/\\/g, '/');
-  
-  // Проверяем уникальность по полному пути
-  if (globalSeenPaths.has(normalized)) {
-    return true;
-  }
-  
-  globalSeenPaths.add(normalized);
-  return false;
+  return EXCLUDE_FOLDERS.some(excluded => name.toLowerCase().includes(excluded.toLowerCase()));
 }
 
 // Рекурсивное сканирование
-function scanDirectory(dirPath, relativePath = '') {
+// hasModelInParent = уже есть фото в родительской папке (для папок-моделей)
+function scanDirectory(dirPath, relativePath = '', hasModelInParent = false) {
   const items = fs.readdirSync(dirPath, { withFileTypes: true });
   const result = { images: [], subcategories: {} };
-
-  for (const item of items) {
-    if (shouldExclude(item.name)) continue;
-
-    const fullPath = path.join(dirPath, item.name);
-    const relPath = path.join(relativePath, item.name);
-
-    if (item.isDirectory()) {
-      const subData = scanDirectory(fullPath, relPath);
-      if (subData.images.length > 0 || Object.keys(subData.subcategories).length > 0) {
-        result.subcategories[item.name] = subData;
-      }
-    } else if (/\.(jpg|jpeg|png|gif|webp)$/i.test(item.name)) {
-      // Проверяем на дубликаты глобально (по полному пути)
-      if (isDuplicate(relPath)) {
-        continue;
-      }
-      
+  
+  // Фильтруем файлы и папки
+  const dirs = items.filter(i => i.isDirectory() && !shouldExclude(i.name));
+  const files = items.filter(i => i.isFile() && /\.(jpg|jpeg|png|gif|webp)$/i.test(i.name));
+  
+  // Пропускаем файлы с (1), (2) — дубликаты
+  const validFiles = files.filter(f => !/\(\d+\)\./.test(f.name));
+  
+  // Если это папка с моделями (есть подпапки) — берем только первое фото
+  // Если это папка цвета (нет подпапок) — берем все фото
+  const isModelFolder = dirs.length === 0;
+  
+  if (validFiles.length > 0) {
+    if (!hasModelInParent && !isModelFolder) {
+      // Это папка модели — берем только первое фото
+      const firstFile = validFiles[0];
       result.images.push({
-        filename: item.name,
-        path: `/images/products/${relPath.replace(/\\/g, '/')}`,
+        filename: firstFile.name,
+        path: `/images/products/${path.join(relativePath, firstFile.name).replace(/\\/g, '/')}`,
       });
+      hasModelInParent = true;
+    } else {
+      // Это папка цвета — берем все фото
+      for (const file of validFiles) {
+        result.images.push({
+          filename: file.name,
+          path: `/images/products/${path.join(relativePath, file.name).replace(/\\/g, '/')}`,
+        });
+      }
+    }
+  }
+  
+  // Рекурсивно сканируем подпапки
+  for (const dir of dirs) {
+    const subPath = path.join(dirPath, dir.name);
+    const subRelPath = path.join(relativePath, dir.name);
+    const subData = scanDirectory(subPath, subRelPath, hasModelInParent);
+    
+    if (subData.images.length > 0 || Object.keys(subData.subcategories).length > 0) {
+      result.subcategories[dir.name] = subData;
     }
   }
 
   return result;
 }
 
-// Подсчёт изображений
 function countImages(data) {
   let count = data.images.length;
   for (const sub of Object.values(data.subcategories)) {
@@ -171,7 +151,6 @@ function countImages(data) {
   return count;
 }
 
-// Получить первое изображение
 function getFirstImage(data) {
   if (data.images.length > 0) return data.images[0].path;
   for (const sub of Object.values(data.subcategories)) {
@@ -181,7 +160,6 @@ function getFirstImage(data) {
   return null;
 }
 
-// Получить все изображения
 function getAllImages(data, result = []) {
   result.push(...data.images.map(img => img.path));
   for (const sub of Object.values(data.subcategories)) {
@@ -217,11 +195,7 @@ function getColorsForBrand(brandName, subcategories) {
   return colors;
 }
 
-// Генерация каталога
 function generateCatalog() {
-  // Сбрасываем глобальное отслеживание
-  globalSeenPaths.clear();
-  
   console.log('🔍 Сканирование:', PRODUCTS_DIR);
 
   if (!fs.existsSync(PRODUCTS_DIR)) {
@@ -243,12 +217,9 @@ function generateCatalog() {
     if (totalImages === 0) continue;
 
     const config = CATEGORY_NAMES[folderName] || { 
-      name: folderName, 
-      icon: '📦', 
-      description: `${totalImages} фото` 
+      name: folderName, icon: '📦', description: `${totalImages} фото` 
     };
 
-    // Обрабатываем подкатегории (бренды)
     const subcategoriesList = [];
     const colorFilters = [];
     
@@ -257,13 +228,10 @@ function generateCatalog() {
       
       const subTotal = countImages(subData);
       const subId = transliterate(subName).toLowerCase().replace(/[^a-z0-9]/g, '-');
-      
-      // Получаем цвета для этого бренда
-      const colors = getColorsForBrand(subName, subData.subcategories);
-      
-      // Нормализуем название для отображения
       const normalizedName = normalizeBrandName(subName);
       const displayName = normalizedName !== subName ? normalizedName : subName.replace(/[_-]/g, ' ').trim();
+      
+      const colors = getColorsForBrand(subName, subData.subcategories);
       
       subcategoriesList.push({
         id: subId,
@@ -277,7 +245,6 @@ function generateCatalog() {
         hasColors: colors.length > 0
       });
       
-      // Добавляем цвета в общий фильтр
       if (colors.length > 0) {
         colorFilters.push(...colors.map(c => ({...c, brandId: subId, brandName: subName})));
       }
@@ -308,12 +275,8 @@ function generateCatalog() {
     categories
   };
 
-  // Сохраняем
   const dataDir = path.dirname(OUTPUT_FILE);
-  if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
-  }
-
+  if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
   fs.writeFileSync(OUTPUT_FILE, JSON.stringify(catalog, null, 2), 'utf-8');
 
   console.log('\n✅ Каталог сгенерирован!');
