@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-07T19:42:13.838Z",
+  "generatedAt": "2026-03-11T06:44:39.971Z",
   "totalCategories": 18,
   "totalImages": 2289,
   "categories": [
@@ -1238,8 +1238,9 @@
       "subcategories": [
         {
           "id": "apollo",
-          "name": "APOLLO",
-          "displayName": "APOLLO",
+          "name": "Apollo",
+          "displayName": "Apollo",
+          "originalName": "APOLLO",
           "images": [
             "/images/products/РУЧКИ/APOLLO/БЕЛЫЕ APOLLO/IMG_0906.JPG",
             "/images/products/РУЧКИ/APOLLO/БЕЛЫЕ APOLLO/IMG_0907.JPG",
@@ -2626,6 +2627,7 @@
           "id": "neon",
           "name": "NEON",
           "displayName": "NEON",
+          "originalName": "NEON",
           "images": [
             "/images/products/РУЧКИ/NEON/2025-07-14 18-17-27 (1).JPEG",
             "/images/products/РУЧКИ/NEON/2025-07-14 18-17-27 (2).JPEG",
@@ -2699,6 +2701,7 @@
           "id": "azhur",
           "name": "АЖУР",
           "displayName": "АЖУР",
+          "originalName": "АЖУР",
           "images": [
             "/images/products/РУЧКИ/АЖУР/IMG_1752.PNG",
             "/images/products/РУЧКИ/АЖУР/IMG_3787.JPG",
@@ -2720,6 +2723,7 @@
           "id": "matovyy-hrom",
           "name": "МАТОВЫЙ ХРОМ",
           "displayName": "МАТОВЫЙ ХРОМ",
+          "originalName": "МАТОВЫЙ ХРОМ",
           "images": [
             "/images/products/РУЧКИ/МАТОВЫЙ ХРОМ/IMG_3752.JPG",
             "/images/products/РУЧКИ/МАТОВЫЙ ХРОМ/IMG_3754.JPG",
@@ -2736,8 +2740,9 @@
         },
         {
           "id": "status",
-          "name": "Статус",
-          "displayName": "Статус",
+          "name": "Status",
+          "displayName": "Status",
+          "originalName": "Статус",
           "images": [
             "/images/products/РУЧКИ/Статус/Slim/Alba Mbn.JPG",
             "/images/products/РУЧКИ/Статус/Slim/Alba Msn.JPG",
@@ -5430,8 +5435,9 @@
       "subcategories": [
         {
           "id": "zamki-status",
-          "name": "ЗАМКИ СТАТУС",
-          "displayName": "ЗАМКИ СТАТУС",
+          "name": "Status",
+          "displayName": "Status",
+          "originalName": "ЗАМКИ СТАТУС",
           "images": [
             "/images/products/ДВЕРНЫЕ МЕХАНИЗМЫ/ЗАМКИ СТАТУС/IMG_1361 — копия.JPG",
             "/images/products/ДВЕРНЫЕ МЕХАНИЗМЫ/ЗАМКИ СТАТУС/IMG_1361.JPG",
@@ -5487,6 +5493,7 @@
           "id": "magnitnye-mezhkomnatnye-zamki",
           "name": "Магнитные межкомнатные замки",
           "displayName": "Магнитные межкомнатные замки",
+          "originalName": "Магнитные межкомнатные замки",
           "images": [
             "/images/products/ДВЕРНЫЕ МЕХАНИЗМЫ/Магнитные межкомнатные замки/IMG_7840.JPG",
             "/images/products/ДВЕРНЫЕ МЕХАНИЗМЫ/Магнитные межкомнатные замки/IMG_7841.JPG",
@@ -5503,6 +5510,7 @@
           "id": "magnitnyy-vreznoy-zamok",
           "name": "МАГНИТНЫЙ ВРЕЗНОЙ ЗАМОК",
           "displayName": "МАГНИТНЫЙ ВРЕЗНОЙ ЗАМОК",
+          "originalName": "МАГНИТНЫЙ ВРЕЗНОЙ ЗАМОК",
           "images": [
             "/images/products/ДВЕРНЫЕ МЕХАНИЗМЫ/МАГНИТНЫЙ ВРЕЗНОЙ ЗАМОК/apolinho/IMG_6540.JPG",
             "/images/products/ДВЕРНЫЕ МЕХАНИЗМЫ/МАГНИТНЫЙ ВРЕЗНОЙ ЗАМОК/apolinho/IMG_6541.JPG",
@@ -5677,6 +5685,7 @@
           "id": "mehanicheskiy",
           "name": "МЕХАНИЧЕСКИЙ",
           "displayName": "МЕХАНИЧЕСКИЙ",
+          "originalName": "МЕХАНИЧЕСКИЙ",
           "images": [
             "/images/products/ДВЕРНЫЕ МЕХАНИЗМЫ/МЕХАНИЧЕСКИЙ/IMG_0072.JPG",
             "/images/products/ДВЕРНЫЕ МЕХАНИЗМЫ/МЕХАНИЧЕСКИЙ/IMG_0073.JPG",
@@ -5970,6 +5979,7 @@
           "id": "bez-ruchki",
           "name": "БЕЗ РУЧКИ",
           "displayName": "БЕЗ РУЧКИ",
+          "originalName": "БЕЗ РУЧКИ",
           "images": [
             "/images/products/СЕРДЕЦЕВИНЫ/БЕЗ РУЧКИ/IMG_6550.JPG",
             "/images/products/СЕРДЕЦЕВИНЫ/БЕЗ РУЧКИ/IMG_6551.JPG",
@@ -5996,6 +6006,7 @@
           "id": "s-povorotnoy-ruchkoy",
           "name": "С ПОВОРОТНОЙ РУЧКОЙ",
           "displayName": "С ПОВОРОТНОЙ РУЧКОЙ",
+          "originalName": "С ПОВОРОТНОЙ РУЧКОЙ",
           "images": [
             "/images/products/СЕРДЕЦЕВИНЫ/С ПОВОРОТНОЙ РУЧКОЙ/IMG_6553.JPG",
             "/images/products/СЕРДЕЦЕВИНЫ/С ПОВОРОТНОЙ РУЧКОЙ/IMG_6556.JPG",
@@ -6033,6 +6044,7 @@
           "id": "serdetseviny",
           "name": "СЕРДЕЦЕВИНЫ",
           "displayName": "СЕРДЕЦЕВИНЫ",
+          "originalName": "СЕРДЕЦЕВИНЫ",
           "images": [
             "/images/products/СЕРДЕЦЕВИНЫ/СЕРДЕЦЕВИНЫ/100(40+10+50) black .JPG",
             "/images/products/СЕРДЕЦЕВИНЫ/СЕРДЕЦЕВИНЫ/100(45+10+45) (Black).JPEG",
@@ -6336,8 +6348,9 @@
       "subcategories": [
         {
           "id": "navesy-babochki-apollot",
-          "name": "навесы бабочки аполлот",
-          "displayName": "навесы бабочки аполлот",
+          "name": "Apollo",
+          "displayName": "Apollo",
+          "originalName": "навесы бабочки аполлот",
           "images": [
             "/images/products/ДВЕРНЫЕ НАВЕСЫ/навесы бабочки аполлот/IMG_0908.JPG",
             "/images/products/ДВЕРНЫЕ НАВЕСЫ/навесы бабочки аполлот/IMG_0937.JPG",
@@ -6458,8 +6471,9 @@
         },
         {
           "id": "navesy-status",
-          "name": "Навесы статус",
-          "displayName": "Навесы статус",
+          "name": "Status",
+          "displayName": "Status",
+          "originalName": "Навесы статус",
           "images": [
             "/images/products/ДВЕРНЫЕ НАВЕСЫ/Навесы статус/IMG_0366.JPG",
             "/images/products/ДВЕРНЫЕ НАВЕСЫ/Навесы статус/IMG_0367.JPG",
@@ -6633,8 +6647,9 @@
       "subcategories": [
         {
           "id": "diamond-apollo",
-          "name": "DIAMOND APOLLO",
-          "displayName": "DIAMOND APOLLO",
+          "name": "Apollo",
+          "displayName": "Apollo",
+          "originalName": "DIAMOND APOLLO",
           "images": [
             "/images/products/СКРЫТАЯ ПЕТЛЯ/DIAMOND APOLLO/IMG_0068.JPG",
             "/images/products/СКРЫТАЯ ПЕТЛЯ/DIAMOND APOLLO/IMG_0069.JPG",
@@ -6760,6 +6775,7 @@
           "id": "sekret-petli",
           "name": "секрет петли",
           "displayName": "секрет петли",
+          "originalName": "секрет петли",
           "images": [
             "/images/products/СКРЫТАЯ ПЕТЛЯ/секрет петли/IMG_7706.JPG",
             "/images/products/СКРЫТАЯ ПЕТЛЯ/секрет петли/IMG_7707.JPG",
@@ -6894,6 +6910,7 @@
           "id": "stiralka",
           "name": "СТИРАЛКА",
           "displayName": "СТИРАЛКА",
+          "originalName": "СТИРАЛКА",
           "images": [
             "/images/products/УПОРЫ ДВЕРНЫЕ/СТИРАЛКА/IMG_2762.JPG",
             "/images/products/УПОРЫ ДВЕРНЫЕ/СТИРАЛКА/IMG_2763.JPG",
@@ -6910,6 +6927,7 @@
           "id": "stopper",
           "name": "СТОППЕР",
           "displayName": "СТОППЕР",
+          "originalName": "СТОППЕР",
           "images": [
             "/images/products/УПОРЫ ДВЕРНЫЕ/СТОППЕР/IMG_2014.JPG",
             "/images/products/УПОРЫ ДВЕРНЫЕ/СТОППЕР/IMG_2015.JPG",
@@ -6980,8 +6998,9 @@
         },
         {
           "id": "stoppery-apollo",
-          "name": "СТОППЕРЫ АПОЛЛО",
-          "displayName": "СТОППЕРЫ АПОЛЛО",
+          "name": "Apollo",
+          "displayName": "Apollo",
+          "originalName": "СТОППЕРЫ АПОЛЛО",
           "images": [
             "/images/products/УПОРЫ ДВЕРНЫЕ/СТОППЕРЫ АПОЛЛО/DOOR STOP BLACK.JPG",
             "/images/products/УПОРЫ ДВЕРНЫЕ/СТОППЕРЫ АПОЛЛО/DOOR STOP MATT GOLD .JPG",
@@ -7011,6 +7030,7 @@
           "id": "shpingalet",
           "name": "ШПИНГАЛЕТ",
           "displayName": "ШПИНГАЛЕТ",
+          "originalName": "ШПИНГАЛЕТ",
           "images": [
             "/images/products/УПОРЫ ДВЕРНЫЕ/ШПИНГАЛЕТ/IMG_1367.JPG",
             "/images/products/УПОРЫ ДВЕРНЫЕ/ШПИНГАЛЕТ/IMG_1368.JPG",
@@ -7114,8 +7134,9 @@
       "subcategories": [
         {
           "id": "zaschelka-apollo",
-          "name": "Защелка apollo",
-          "displayName": "Защелка apollo",
+          "name": "Apollo",
+          "displayName": "Apollo",
+          "originalName": "Защелка apollo",
           "images": [
             "/images/products/ЗАЩЕЛКИ/Защелка apollo/IMG_4350.JPG",
             "/images/products/ЗАЩЕЛКИ/Защелка apollo/IMG_4352.JPG",
@@ -7138,8 +7159,9 @@
         },
         {
           "id": "zaschelka-status",
-          "name": "Защелка статус",
-          "displayName": "Защелка статус",
+          "name": "Status",
+          "displayName": "Status",
+          "originalName": "Защелка статус",
           "images": [
             "/images/products/ЗАЩЕЛКИ/Защелка статус/D-45 MSN.JPG",
             "/images/products/ЗАЩЕЛКИ/Защелка статус/IMG_0329.JPG",
@@ -7186,6 +7208,7 @@
           "id": "magnitnye-zaschelki",
           "name": "МАГНИТНЫЕ ЗАЩЕЛКИ",
           "displayName": "МАГНИТНЫЕ ЗАЩЕЛКИ",
+          "originalName": "МАГНИТНЫЕ ЗАЩЕЛКИ",
           "images": [
             "/images/products/ЗАЩЕЛКИ/МАГНИТНЫЕ ЗАЩЕЛКИ/IMG_1372.JPG",
             "/images/products/ЗАЩЕЛКИ/МАГНИТНЫЕ ЗАЩЕЛКИ/IMG_1373.JPG",
@@ -7267,8 +7290,9 @@
       "subcategories": [
         {
           "id": "apollo-zadvizhka",
-          "name": "APOLLO ЗАДВИЖКА",
-          "displayName": "APOLLO ЗАДВИЖКА",
+          "name": "Apollo",
+          "displayName": "Apollo",
+          "originalName": "APOLLO ЗАДВИЖКА",
           "images": [
             "/images/products/ЗАДВИЖКИ/APOLLO ЗАДВИЖКА/IMG_4348.JPG",
             "/images/products/ЗАДВИЖКИ/APOLLO ЗАДВИЖКА/IMG_4349.JPG",
@@ -7289,8 +7313,9 @@
         },
         {
           "id": "status-zadvizhka",
-          "name": "СТАТУС ЗАДВИЖКА",
-          "displayName": "СТАТУС ЗАДВИЖКА",
+          "name": "Status",
+          "displayName": "Status",
+          "originalName": "СТАТУС ЗАДВИЖКА",
           "images": [
             "/images/products/ЗАДВИЖКИ/СТАТУС ЗАДВИЖКА/D-45 MSN.JPG",
             "/images/products/ЗАДВИЖКИ/СТАТУС ЗАДВИЖКА/IMG_0312.JPG",
@@ -7483,6 +7508,7 @@
           "id": "dlya-razdvizhnyh-dverey",
           "name": "Для раздвижных дверей",
           "displayName": "Для раздвижных дверей",
+          "originalName": "Для раздвижных дверей",
           "images": [
             "/images/products/РАЗДВИЖНЫЕ СИСТЕМЫ/Для раздвижных дверей/IMG_7004.JPG",
             "/images/products/РАЗДВИЖНЫЕ СИСТЕМЫ/Для раздвижных дверей/IMG_7006.JPG",
@@ -7535,6 +7561,7 @@
           "id": "rolikovyy-fiksator",
           "name": "РОЛИКОВЫЙ ФИКСАТОР",
           "displayName": "РОЛИКОВЫЙ ФИКСАТОР",
+          "originalName": "РОЛИКОВЫЙ ФИКСАТОР",
           "images": [
             "/images/products/ФИКСАТОРЫ/РОЛИКОВЫЙ ФИКСАТОР/IMG_3592.JPG",
             "/images/products/ФИКСАТОРЫ/РОЛИКОВЫЙ ФИКСАТОР/IMG_3593.JPG",
@@ -7549,6 +7576,7 @@
           "id": "sharikovyy-fiksator",
           "name": "Шариковый фиксатор",
           "displayName": "Шариковый фиксатор",
+          "originalName": "Шариковый фиксатор",
           "images": [
             "/images/products/ФИКСАТОРЫ/Шариковый фиксатор/IMG_1374.JPG",
             "/images/products/ФИКСАТОРЫ/Шариковый фиксатор/IMG_1375.JPG",
@@ -7589,8 +7617,9 @@
       "subcategories": [
         {
           "id": "wc-cyl",
-          "name": "WC-CYL",
+          "name": "WC CYL",
           "displayName": "WC CYL",
+          "originalName": "WC-CYL",
           "images": [
             "/images/products/WC-комплект с ключом/WC-CYL/IMG_2819.JPG",
             "/images/products/WC-комплект с ключом/WC-CYL/IMG_2820.JPG",

@@ -15,7 +15,7 @@ const PRODUCTS_DIR = path.join(__dirname, '../public/images/products');
 const OUTPUT_FILE = path.join(__dirname, '../src/data/products-catalog.json');
 
 // Исключаемые папки
-const EXCLUDE_FOLDERS = ['auto', 'real', 'duplicates'];
+const EXCLUDE_FOLDERS = ['auto', 'real', 'duplicates', 'дубликаты', 'копии', 'temp', 'tmp'];
 
 // Цвета для Apollo
 const APOLLO_COLORS = {
@@ -59,6 +59,32 @@ const CATEGORY_NAMES = {
   'ДОВОДЧИКИ ДВЕРНЫЕ': { name: 'Доводчики', icon: '', description: 'Плавное закрывание' },
   'WC-комплект с ключом': { name: 'WC комплекты', icon: '', description: 'Для санузлов' },
 };
+
+// Нормализация названий брендов
+function normalizeBrandName(name) {
+  const upper = name.toUpperCase();
+  
+  // Apollo варианты
+  if (upper.includes('APOLLO') || upper.includes('АПОЛЛО') || upper.includes('АПОЛО')) {
+    return 'Apollo';
+  }
+  
+  // Status варианты  
+  if (upper.includes('STATUS') || upper.includes('СТАТУС')) {
+    return 'Status';
+  }
+  
+  // Diamond
+  if (upper.includes('DIAMOND') || upper.includes('ДАЙМОНД') || upper.includes('ДАЙМОНД')) {
+    return 'Diamond';
+  }
+  
+  // Для остальных - очищаем и форматируем
+  return name
+    .replace(/[_-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
 
 // Транслитерация
 function transliterate(str) {
@@ -206,10 +232,15 @@ function generateCatalog() {
       // Получаем цвета для этого бренда
       const colors = getColorsForBrand(subName, subData.subcategories);
       
+      // Нормализуем название для отображения
+      const normalizedName = normalizeBrandName(subName);
+      const displayName = normalizedName !== subName ? normalizedName : subName.replace(/[_-]/g, ' ').trim();
+      
       subcategoriesList.push({
         id: subId,
-        name: subName,
-        displayName: subName.replace(/[_-]/g, ' ').trim(),
+        name: normalizedName,
+        displayName: displayName,
+        originalName: subName,
         images: getAllImages(subData),
         totalImages: subTotal,
         previewImage: getFirstImage(subData),
