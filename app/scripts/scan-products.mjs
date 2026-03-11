@@ -17,6 +17,9 @@ const OUTPUT_FILE = path.join(__dirname, '../src/data/products-catalog.json');
 // Исключаемые папки
 const EXCLUDE_FOLDERS = ['auto', 'real', 'duplicates', 'дубликаты', 'копии', 'temp', 'tmp'];
 
+// Глобальное отслеживание уникальных файлов (по полному пути)
+const globalSeenPaths = new Set();
+
 // Цвета для Apollo
 const APOLLO_COLORS = {
   'БЕЛЫЕ APOLLO': { name: 'Белый', color: '#FFFFFF', bg: '#F5F5F5' },
@@ -109,8 +112,23 @@ function shouldExclude(name) {
   return EXCLUDE_FOLDERS.some(excluded => lower.includes(excluded.toLowerCase()));
 }
 
-// Отслеживание уникальных файлов (глобально)
-const seenFilenames = new Set();
+// Проверка на дубликат файла (по полному пути)
+function isDuplicate(relPath) {
+  // Пропускаем файлы с (1), (2) и т.д. — это дубликаты
+  if (/\(\d+\)\./.test(relPath)) {
+    return true;
+  }
+  
+  const normalized = relPath.toLowerCase().replace(/\\/g, '/');
+  
+  // Проверяем уникальность по полному пути
+  if (globalSeenPaths.has(normalized)) {
+    return true;
+  }
+  
+  globalSeenPaths.add(normalized);
+  return false;
+}
 
 // Рекурсивное сканирование
 function scanDirectory(dirPath, relativePath = '') {
@@ -129,20 +147,11 @@ function scanDirectory(dirPath, relativePath = '') {
         result.subcategories[item.name] = subData;
       }
     } else if (/\.(jpg|jpeg|png|gif|webp)$/i.test(item.name)) {
-      // Проверяем на дубликаты по имени файла
-      const normalizedName = item.name.toLowerCase().replace(/\s+/g, '_');
-      
-      // Пропускаем если уже видели этот файл
-      if (seenFilenames.has(normalizedName)) {
+      // Проверяем на дубликаты глобально (по полному пути)
+      if (isDuplicate(relPath)) {
         continue;
       }
       
-      // Пропускаем файлы с (1), (2) и т.д. в имени — это дубликаты
-      if (/\(\d+\)\./.test(item.name)) {
-        continue;
-      }
-      
-      seenFilenames.add(normalizedName);
       result.images.push({
         filename: item.name,
         path: `/images/products/${relPath.replace(/\\/g, '/')}`,
@@ -210,8 +219,8 @@ function getColorsForBrand(brandName, subcategories) {
 
 // Генерация каталога
 function generateCatalog() {
-  // Сбрасываем отслеживание дубликатов
-  seenFilenames.clear();
+  // Сбрасываем глобальное отслеживание
+  globalSeenPaths.clear();
   
   console.log('🔍 Сканирование:', PRODUCTS_DIR);
 
