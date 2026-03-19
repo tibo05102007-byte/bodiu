@@ -40,6 +40,7 @@ const STATUS_COLORS = {
 
 // Сопоставление названий категорий
 const CATEGORY_NAMES = {
+  'НОВИНКИ': { name: 'Новинки', icon: '✨', description: 'Новые поступления' },
   'РУЧКИ': { name: 'Ручки', icon: '', description: '500+ моделей в разных цветах' },
   'ДВЕРНЫЕ МЕХАНИЗМЫ': { name: 'Дверные механизмы', icon: '', description: 'Магнитные, механические, пластиковые' },
   'ДВЕРНЫЕ НАВЕСЫ': { name: 'Дверные навесы', icon: '', description: 'Бабочки, карточные петли' },
@@ -266,13 +267,33 @@ function generateCatalog() {
     });
   }
 
+  // Добавляем категорию "Новинки" (пустая, для будущих моделей)
+  categories.unshift({
+    id: 'new-arrivals',
+    folderName: 'НОВИНКИ',
+    name: 'Новинки',
+    icon: '✨',
+    description: 'Новые поступления',
+    totalImages: 0,
+    previewImage: null,
+    allImages: [],
+    subcategories: [],
+    colorFilters: [],
+    hasSubcategories: false,
+    hasColorFilters: false
+  });
+
   categories.sort((a, b) => b.totalImages - a.totalImages);
+  // Перемещаем Новинки в начало после сортировки
+  const newArrivals = categories.find(c => c.id === 'new-arrivals');
+  const otherCategories = categories.filter(c => c.id !== 'new-arrivals');
+  const sortedCategories = [newArrivals, ...otherCategories];
 
   const catalog = {
     generatedAt: new Date().toISOString(),
-    totalCategories: categories.length,
-    totalImages: categories.reduce((sum, cat) => sum + cat.totalImages, 0),
-    categories
+    totalCategories: sortedCategories.length,
+    totalImages: sortedCategories.reduce((sum, cat) => sum + cat.totalImages, 0),
+    categories: sortedCategories
   };
 
   const dataDir = path.dirname(OUTPUT_FILE);

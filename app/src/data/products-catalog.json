@@ -1,8 +1,22 @@
 {
-  "generatedAt": "2026-03-16T19:12:09.853Z",
-  "totalCategories": 18,
+  "generatedAt": "2026-03-19T09:16:25.301Z",
+  "totalCategories": 19,
   "totalImages": 2201,
   "categories": [
+    {
+      "id": "new-arrivals",
+      "folderName": "НОВИНКИ",
+      "name": "Новинки",
+      "icon": "✨",
+      "description": "Новые поступления",
+      "totalImages": 0,
+      "previewImage": null,
+      "allImages": [],
+      "subcategories": [],
+      "colorFilters": [],
+      "hasSubcategories": false,
+      "hasColorFilters": false
+    },
     {
       "id": "ruchki",
       "folderName": "РУЧКИ",
